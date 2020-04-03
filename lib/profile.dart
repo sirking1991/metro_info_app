@@ -1,10 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Profile extends StatelessWidget {
+
+class Profile extends StatefulWidget {
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+
+  bool _initialLoad = true;
+
+  String _firstName = '';
+  String _lastName = '';
+  String _mobile = '';
+  String _email = '';
+  String _dob = '';
+
+  void _loadProfileData() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _firstName = prefs.getString('first_name');
+      _lastName = prefs.getString('last_name');
+      _mobile = prefs.getString('mobile');
+      _email = prefs.getString('email');
+      _dob = prefs.getString('dob');
+    });
+
+    _initialLoad = false;
+
+    print('Profile data loaded first_name=' + _firstName + ' las_name=' + _lastName);
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    print('build');
+    if(_initialLoad) _loadProfileData();
+
     final _formKey = GlobalKey<FormState>();
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -51,47 +88,69 @@ class Profile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     TextFormField(
+                      initialValue: _firstName,
                       decoration:
                           const InputDecoration(labelText: 'First name'),
                       validator: (value) {
-                        if (value.isEmpty) {
-                          return 'First name is required';
-                        }
+                        if (value.isEmpty) return 'First name is required';
                         return null;
+                      },
+                      onSaved: (String v) {
+                        _firstName = v;
                       },
                     ),
                     TextFormField(
+                      initialValue: _lastName,
                       decoration: const InputDecoration(labelText: 'Last name'),
                       validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Last name is required';
-                        }
+                        if (value.isEmpty) return 'Last name is required';
                         return null;
+                      },
+                      onSaved: (String v) {
+                        _lastName = v;
                       },
                     ),
                     TextFormField(
+                      initialValue: _mobile,
                       keyboardType: TextInputType.phone,
                       decoration: const InputDecoration(
                           labelText: 'Mobile phone number'),
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value.isEmpty)
                           return 'Mobile phone number is required';
-                        }
                         return null;
+                      },
+                      onSaved: (String v) {
+                        _mobile = v;
                       },
                     ),
                     TextFormField(
+                      initialValue: _email,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(labelText: 'Email'),
                       validator: (value) {
-                        return null;
+                        Pattern pattern =
+                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                        RegExp regex = new RegExp(pattern);
+                        if (!regex.hasMatch(value))
+                          return 'Enter Valid Email';
+                        else
+                          return null;
+                      },
+                      onSaved: (String v) {
+                        _email = v;
                       },
                     ),
                     TextFormField(
+                      initialValue: _dob,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'Birth date'),
+                      decoration:
+                          const InputDecoration(labelText: 'Birth date'),
                       validator: (value) {
                         return null;
+                      },
+                      onSaved: (String v) {
+                        _dob = v;
                       },
                     ),
                     Padding(
@@ -103,11 +162,18 @@ class Profile extends StatelessWidget {
                           if (_formKey.currentState.validate()) {
                             // Process data.
                             // obtain shared preferences
-                            final prefs = await SharedPreferences.getInstance();
+                            _formKey.currentState.save();
 
-// set value
-                            //prefs.setInt('first_name', counter);
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
 
+                            // set value
+                            prefs.setString('first_name', _firstName.trim());
+                            prefs.setString('last_name', _lastName.trim());
+                            prefs.setString('mobile', _mobile.trim());
+                            prefs.setString('email', _email.trim());
+                            prefs.setString('dob', _dob.trim());
+
+                            print('Profile saved');
                           }
                         },
                         child: Text('Update'),
