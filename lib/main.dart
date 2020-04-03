@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:metro_info/news_detail.dart';
+import 'package:metro_info/profile.dart';
+import 'package:metro_info/send_message.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,15 +31,43 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    final Color _primaryColor = Colors.green; //Color.fromRGBO(255, 82, 48, 1);
+    final Color _primaryColor = Color.fromRGBO(255, 82, 48, 1);
+    final String _lguLogoPath = 'https://upload.wikimedia.org/wikipedia/en/4/48/Ph_seal_ncr_pasay.png';
+    final String _lguName = 'Pasay City';
+    final String _regionName = 'National Capital Region';
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: _primaryColor,
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          color: Colors.white,
+          iconSize: 30.0,
+          onPressed: () {
+            print('humburger icon clicked');
+          },
+        ),
+        title: Text(
+          'metro-info',
+          style: TextStyle(fontSize: 30.0, color: Colors.white),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.person_outline),
+            color: Colors.white,
+            iconSize: 30.0,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => Profile()));
+            },
+          )
+        ],
+      ),
       backgroundColor: Color.fromRGBO(244, 244, 244, 1),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TopNavBar(_primaryColor, widget._navBarTitle),
+          children: <Widget>[            
             Stack(
               children: <Widget>[
                 TopHeader(_primaryColor),
@@ -43,8 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      child: Image.network(
-                        'https://upload.wikimedia.org/wikipedia/en/4/48/Ph_seal_ncr_pasay.png',
+                      child: CachedNetworkImage(
+                        imageUrl: _lguLogoPath,
                         width: 120.0,
                       ),
                       padding:
@@ -53,10 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('Pasay City',
+                        Text(_lguName,
                             style:
                                 TextStyle(color: Colors.white, fontSize: 25.0)),
-                        Text('National apital Region',
+                        Text(_regionName,
                             style:
                                 TextStyle(color: Colors.white, fontSize: 15.0)),
                       ],
@@ -73,7 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: _primaryColor,
         onPressed: () {
-          print('send message tapped');
+          Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => SendMessage()));
         },
         tooltip: 'Send ',
         child: Icon(Icons.message),
@@ -115,13 +148,16 @@ class NewsBox extends StatelessWidget {
                 ),
               ),
             ),
-            ListItem(
-                'Aenean aliquet, tellus et semper aliquet', 'Posted 2 hrs ago', Icons.mail_outline),
-            ListItem(
-                'Nam porta consectetur arcu', 'Posted 2 hrs ago', Icons.mail_outline),
-            ListItem('Lorem ipsum dolor sit amet, consectetur adipiscing elit', 'Posted 3 hrs ago', Icons.mail_outline),
-            ListItem('Etiam ac lectus vel enim viverra venenatis.', 'Posted 1 day ago', Icons.mail_outline),
-            ListItem('Duis eget orci quam. Vivamus a ultrices ex', 'Posted 1 day ago', Icons.mail_outline),
+            ListItem('Aenean aliquet, tellus et semper aliquet',
+                'Posted 2 hrs ago', Icons.mail_outline),
+            ListItem('Nam porta consectetur arcu', 'Posted 2 hrs ago',
+                Icons.mail_outline),
+            ListItem('Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+                'Posted 3 hrs ago', Icons.mail_outline),
+            ListItem('Etiam ac lectus vel enim viverra venenatis.',
+                'Posted 1 day ago', Icons.mail_outline),
+            ListItem('Duis eget orci quam. Vivamus a ultrices ex',
+                'Posted 1 day ago', Icons.mail_outline),
           ],
         ),
       ),
@@ -161,13 +197,16 @@ class EventsBox extends StatelessWidget {
                 ),
               ),
             ),
-            ListItem(
-                'Aenean aliquet, tellus et semper aliquet', 'Apr 3, 2020 2pm - 3pm', Icons.today),
-            ListItem(
-                'Nam porta consectetur arcu', 'Apr 9, 2020 8am - 12pm', Icons.today),
-            ListItem('Lorem ipsum dolor sit amet, consectetur adipiscing elit', '3 hrs ago', Icons.today),
-            ListItem('Etiam ac lectus vel enim viverra venenatis.', '1 day ago', Icons.today),
-            ListItem('Donec fermentum sit amet nibh et vehicula.', '2 days ago', Icons.today),
+            ListItem('Aenean aliquet, tellus et semper aliquet',
+                'Apr 3, 2020 2pm - 3pm', Icons.today),
+            ListItem('Nam porta consectetur arcu', 'Apr 9, 2020 8am - 12pm',
+                Icons.today),
+            ListItem('Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+                '3 hrs ago', Icons.today),
+            ListItem('Etiam ac lectus vel enim viverra venenatis.', '1 day ago',
+                Icons.today),
+            ListItem('Donec fermentum sit amet nibh et vehicula.', '2 days ago',
+                Icons.today),
           ],
         ),
       ),
@@ -196,52 +235,10 @@ class ListItem extends StatelessWidget {
       subtitle: Text(_subTitle),
       enabled: true,
       contentPadding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
-    );
-  }
-}
-
-class TopNavBar extends StatelessWidget {
-  final _primaryColor;
-  final _title;
-
-  const TopNavBar(this._primaryColor, this._title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: _primaryColor,
-        border: Border.all(color: _primaryColor),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(top: 30.0, right: 15.0, left: 15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.menu),
-              color: Colors.white,
-              iconSize: 30.0,
-              onPressed: () {
-                print('humburger icon tapped');
-              },
-            ),
-            Text(
-              _title,
-              style: TextStyle(fontSize: 30.0, color: Colors.white),
-            ),
-            IconButton(
-              icon: Icon(Icons.person_outline),
-              color: Colors.white,
-              iconSize: 30.0,
-              onPressed: () {
-                print('profile icon tapped');
-              },
-            ),
-          ],
-        ),
-      ),
+      onTap: (){
+        Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => NewsDetail()));
+      },
     );
   }
 }
