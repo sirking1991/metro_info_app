@@ -7,6 +7,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+
+  // check if user has already selected region/lgu
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    final Color _primaryColor = Color.fromRGBO(255, 82, 48, 1);
+    final Color _primaryColor = Colors.indigo;  //Color.fromRGBO(255, 82, 48, 1);
     final String _lguLogoPath = 'https://upload.wikimedia.org/wikipedia/en/4/48/Ph_seal_ncr_pasay.png';
     final String _lguName = 'Pasay City';
     final String _regionName = 'National Capital Region';
@@ -123,7 +126,6 @@ class NewsBox extends StatelessWidget {
       padding: EdgeInsets.only(top: 10.0, right: 25.0, left: 25.0),
       child: Container(
         width: double.infinity,
-        height: 480.0,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -172,7 +174,6 @@ class EventsBox extends StatelessWidget {
       padding: EdgeInsets.only(top: 10.0, right: 25.0, left: 25.0),
       child: Container(
         width: double.infinity,
-        height: 480.0,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(20.0)),

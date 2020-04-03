@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -96,11 +97,17 @@ class Profile extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 40.0),
                       child: RaisedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           if (_formKey.currentState.validate()) {
                             // Process data.
+                            // obtain shared preferences
+                            final prefs = await SharedPreferences.getInstance();
+
+// set value
+                            //prefs.setInt('first_name', counter);
+
                           }
                         },
                         child: Text('Update'),
