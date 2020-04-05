@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:metro_info/models/app_user.dart';
+import 'package:metro_info/repository/app_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:device_id/device_id.dart';
+import 'package:flutter/services.dart';
 
 
 class Profile extends StatefulWidget {
@@ -16,8 +20,38 @@ class _ProfileState extends State<Profile> {
   String _mobile = '';
   String _email = '';
   String _dob = '';
+  String _deviceId;
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  void getDeviceInfo() async {
+    String deviceid;
+    String imei;
+    String meid;
+
+    deviceid = await DeviceId.getID;
+    try {
+      imei = await DeviceId.getIMEI;
+      meid = await DeviceId.getMEID;
+    } on PlatformException catch (e) {
+      print(e.message);
+    }
+    print('Your deviceid: $deviceid\nYour IMEI: $imei\nYour MEID: $meid');
+
+    _deviceId = deviceid;
+
+  }
+
 
   void _loadProfileData() async {
+
+    getDeviceInfo();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -37,12 +71,14 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    print('build');
+
     if(_initialLoad) _loadProfileData();
 
     final _formKey = GlobalKey<FormState>();
 
+
     return Scaffold(
+      key: _scaffoldKey,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,6 +210,19 @@ class _ProfileState extends State<Profile> {
                             prefs.setString('dob', _dob.trim());
 
                             print('Profile saved');
+
+                            var appUser = new AppUser();
+                            appUser.deviceID = _deviceId;
+                            appUser.firstName = _firstName.trim();
+                            appUser.lastName = _lastName.trim();
+                            appUser.mobile = _mobile.trim();
+                            appUser.email = _email.trim();
+                            appUser.dob = _dob.trim();
+
+                            var appUserRepository = new AppUserRepository();
+                            appUserRepository.registerUser(appUser);
+
+                            _displaySnackBar(context, 'Profile saved');
                           }
                         },
                         child: Text('Update'),
@@ -188,4 +237,11 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+
+
+  void _displaySnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(content: Text(message));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
 }
+

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:metro_info/news_detail.dart';
 import 'package:metro_info/profile.dart';
+import 'package:metro_info/region_lgu_selector.dart';
 import 'package:metro_info/send_message.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -24,7 +25,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  final _navBarTitle = '';
   final lguName = 'Pasay City'; // TODO: This should be taken from localstorage
 
   @override
@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    final Color _primaryColor = Colors.indigo;  //Color.fromRGBO(255, 82, 48, 1);
+    final Color _primaryColor = Colors.green;  //Color.fromRGBO(255, 82, 48, 1);
     final String _lguLogoPath = 'https://upload.wikimedia.org/wikipedia/en/4/48/Ph_seal_ncr_pasay.png';
     final String _lguName = 'Pasay City';
     final String _regionName = 'National Capital Region';
@@ -47,7 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Colors.white,
           iconSize: 30.0,
           onPressed: () {
-            print('humburger icon clicked');
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => RegionLGUSelector()));
           },
         ),
         title: Text(
