@@ -8,6 +8,6 @@ class AppUserRepository {
   Future<void> registerUser(AppUser appUser) async {
 
     final response = await _provider.post("register_app_user", appUser.toJson());
-    print(response.toString());
+    print('register user result: ' + response.toString());
   }
 }

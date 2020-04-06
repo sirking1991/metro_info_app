@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metro_info/models/app_user.dart';
-import 'package:metro_info/providers/user_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
@@ -21,8 +20,8 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     print('Profile build');
 
-    return Consumer<UserProfile>(
-      builder: (context, userProfile, child) => Scaffold(
+    return Consumer<AppUser>(
+      builder: (context, appUser, child) => Scaffold(
         key: _scaffoldKey,
         body: SingleChildScrollView(
           child: Column(
@@ -69,28 +68,28 @@ class _ProfileState extends State<Profile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         TextFormField(
-                          initialValue: userProfile.appUser.firstName,
+                          initialValue: appUser.firstName,
                           decoration:
                               const InputDecoration(labelText: 'First name'),
                           validator: (value) {
                             return value.isEmpty ? 'First name is required' : null;
                           },
                           onSaved: (String v) {
-                            userProfile.appUser.firstName = v;
+                            appUser.firstName = v;
                           },
                         ),
                         TextFormField(
-                          initialValue: userProfile.appUser.lastName,
+                          initialValue: appUser.lastName,
                           decoration: const InputDecoration(labelText: 'Last name'),
                           validator: (value) {
                             return value.isEmpty ? 'Last name is required' : null;
                           },
                           onSaved: (String v) {
-                            userProfile.appUser.lastName = v;
+                            appUser.lastName = v;
                           },
                         ),
                         TextFormField(
-                          initialValue: userProfile.appUser.mobile,
+                          initialValue: appUser.mobile,
                           keyboardType: TextInputType.phone,
                           decoration: const InputDecoration(
                               labelText: 'Mobile phone number'),
@@ -98,11 +97,11 @@ class _ProfileState extends State<Profile> {
                             return value.isEmpty ? 'Mobile phone number is required' : null;
                           },
                           onSaved: (String v) {
-                            userProfile.appUser.mobile = v;
+                            appUser.mobile = v;
                           },
                         ),
                         TextFormField(
-                          initialValue: userProfile.appUser.email,
+                          initialValue: appUser.email,
                           keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(labelText: 'Email'),
                           validator: (value) {
@@ -112,11 +111,11 @@ class _ProfileState extends State<Profile> {
                             return !regex.hasMatch(value) ? 'Enter Valid Email' : null;
                           },
                           onSaved: (String v) {
-                            userProfile.appUser.email = v;
+                            appUser.email = v;
                           },
                         ),
                         TextFormField(
-                          initialValue: userProfile.appUser.dob,
+                          initialValue: appUser.dob,
                           keyboardType: TextInputType.number,
                           decoration:
                               const InputDecoration(labelText: 'Birth date'),
@@ -124,43 +123,20 @@ class _ProfileState extends State<Profile> {
                             return null;
                           },
                           onSaved: (String v) {
-                            userProfile.appUser.dob = v;
+                            appUser.dob = v;
                           },
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 40.0),
                           child: RaisedButton(
                             onPressed: () async {
-
-                              //final FormState form = Form.of(context);
-//                             final form = _formKey.currentState;
-
-                              // Validate will return true if the form is valid, or false if
                               // the form is invalid.
                               if (_formKey.currentState.validate()) {
-                                // Process data.
-                                // obtain shared preferences
+
                                 _formKey.currentState.save();
 
-                                // set value
-                                userProfile.appUser.firstName = _firstName.trim();
-                                userProfile.appUser.lastName = _lastName.trim();
-                                userProfile.appUser.mobile = _mobile.trim();
-                                userProfile.appUser.email = _email.trim();
-                                userProfile.appUser.dob = _dob.trim();
+                                appUser.save();
 
-                                print('Profile saved');
-
-                                var appUser = new AppUser();
-                                appUser.deviceId = _deviceId;
-                                appUser.firstName = _firstName.trim();
-                                appUser.lastName = _lastName.trim();
-                                appUser.mobile = _mobile.trim();
-                                appUser.email = _email.trim();
-                                appUser.dob = _dob.trim();
-
-                                var appUserRepository = new AppUserRepository();
-                                appUserRepository.registerUser(userProfile.appUser.);
 
                                 _displaySnackBar(context, 'Profile saved');
                               }

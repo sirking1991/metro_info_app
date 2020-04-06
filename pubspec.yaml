@@ -20,9 +20,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.12.0+1
+  http:
 
-  device_id: ^0.2.0
+  device_id:
+
+  provider:
 
   cached_network_image:
 
