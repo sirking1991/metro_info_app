@@ -16,9 +16,19 @@ class AppUser extends ChangeNotifier {
   AppUser(){
     _loadProfileData();
     _getDeviceInfo();
+
+    notifyListeners();
   }
 
-  save() {
+
+  save() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('first_name', firstName);
+    prefs.setString('last_name', lastName);
+    prefs.setString('mobile', mobile);
+    prefs.setString('email', email);
+    prefs.setString('dob', dob);
+    prefs.setInt('lgu_id', lguId);
     var appUserRepository = new AppUserRepository();
     appUserRepository.registerUser(this);
   }
@@ -31,8 +41,7 @@ class AppUser extends ChangeNotifier {
     print('Your deviceid: $deviceid');
 
     deviceId = deviceid;
-
-    notifyListeners();
+    
   }
 
   void _loadProfileData() async {
@@ -44,8 +53,9 @@ class AppUser extends ChangeNotifier {
     mobile = prefs.getString('mobile');
     email = prefs.getString('email');
     dob = prefs.getString('dob');
+    lguId = prefs.getInt('lgu_id');
 
-    notifyListeners();
+    print('firstName={$firstName} lastName={$lastName} mobile={$mobile} email={$email} dob={$dob}');
   }
 
   Map<String, dynamic> toJson() {
