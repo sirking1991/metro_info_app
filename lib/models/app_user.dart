@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:metro_info/repository/app_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppUser  with ChangeNotifier {
+class AppUser extends ChangeNotifier {
   int id;
   String deviceId;
   String firstName;
@@ -17,7 +17,6 @@ class AppUser  with ChangeNotifier {
     _loadProfileData();
     _getDeviceInfo();
   }
-
 
   save() {
     var appUserRepository = new AppUserRepository();
@@ -35,7 +34,6 @@ class AppUser  with ChangeNotifier {
 
     notifyListeners();
   }
-
 
   void _loadProfileData() async {
 
