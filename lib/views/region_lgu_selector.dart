@@ -4,6 +4,8 @@ import 'package:metro_info/repository/regions.dart';
 class RegionLGUSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<String> _locations = ['A', 'B', 'C', 'D'];
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -28,7 +30,6 @@ class RegionLGUSelector extends StatelessWidget {
                 ),
               ),
             ),
-
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 30.0),
               child: Text(
@@ -39,12 +40,22 @@ class RegionLGUSelector extends StatelessWidget {
                     fontSize: 32.0),
               ),
             ),
-            
+            Padding(
+              padding: EdgeInsets.all(25.0),
+              child: DropdownButton(
+                value: '',
+                items: _locations.map((String location) {
+                  return new DropdownMenuItem<String>(
+                    child: new Text(location),
+                  );
+                }).toList(),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(25.0),
               child: RaisedButton(
                 child: Text('Get regions'),
-                onPressed: (){
+                onPressed: () {
                   print('getting regions');
                   RegionsRepository regionReposiory = RegionsRepository();
                   final regions = regionReposiory.fetchRegions();

@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:metro_info/repository/regions.dart';
 import 'package:metro_info/views/news_detail.dart';
 import 'package:metro_info/views/profile.dart';
+import 'package:metro_info/views/region_lgu_selector.dart';
 import 'package:metro_info/views/send_message.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -30,7 +32,15 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icon(Icons.menu),
           color: Colors.white,
           iconSize: 30.0,
-          onPressed: () {},
+          onPressed: () {
+
+            // RegionsRepository regionsRepository = RegionsRepository();
+            // print(regionsRepository.fetchRegions());
+
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => RegionLGUSelector()));            
+
+          },
         ),
         title: Text(
           'metro-info',

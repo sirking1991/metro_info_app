@@ -16,7 +16,6 @@ class AppUser extends ChangeNotifier {
   AppUser(){
     _loadProfileData();
     _getDeviceInfo();
-
     notifyListeners();
   }
 
