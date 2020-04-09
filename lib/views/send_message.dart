@@ -50,7 +50,7 @@ class SendMessage extends StatelessWidget {
                   children: <Widget>[
                     TextFormField(
                       maxLines: 3,
-                      maxLength: 128,
+                      maxLength: 256,
                       decoration:
                           const InputDecoration(labelText: 'Your message',),
                       validator: (value) {
