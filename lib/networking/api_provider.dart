@@ -5,7 +5,8 @@ import 'dart:convert';
 import 'dart:async';
 
 class ApiProvider {
-  final String _baseUrl = "https://8a1b829a.ap.ngrok.io/api/";
+  final String _baseUrl = "https://c0c79a50.ap.ngrok.io/api/"; 
+  // "https://8a1b829a.ap.ngrok.io/api/";
 
   Future<dynamic> get(String url) async {
     var responseJson;

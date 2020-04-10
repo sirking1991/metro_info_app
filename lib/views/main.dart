@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // print(regionsRepository.fetchRegions());
 
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => RegionLGUSelector()));            
+                  builder: (BuildContext context) => RegionLGUSelector(isIntial: false,)));            
 
           },
         ),

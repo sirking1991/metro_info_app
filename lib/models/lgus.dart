@@ -8,11 +8,11 @@ class LGUs {
 
   LGUs(
       {this.id,
-        this.regionShortName,
-        this.name,
-        this.slug,
-        this.createdAt,
-        this.updatedAt});
+      this.regionShortName,
+      this.name,
+      this.slug,
+      this.createdAt,
+      this.updatedAt});
 
   LGUs.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -32,5 +32,21 @@ class LGUs {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;
+  }
+
+  static List<LGUs> getMapLGUs(List data) {
+    
+    List<LGUs> datatemp = [];
+    data.forEach((item) {
+      datatemp.add(LGUs(
+          id: item["id"],
+          name: item["name"],
+          updatedAt: item["updated_at"],
+          regionShortName: item["region_short_name"],
+          slug: item["slug"],
+          createdAt: item["create_at"]));
+      // print(datatemp);
+    });
+    return datatemp;
   }
 }
