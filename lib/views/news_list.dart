@@ -71,7 +71,7 @@ class ListItem extends StatefulWidget {
 class _ListItemState extends State<ListItem> {
   @override
   Widget build(BuildContext context) {
-    var _icon = Icons.new_releases;
+    var _icon = Icons.mail_outline;
     var _postingDateString  = widget._news.postingDate;    
 
     return ListTile(
