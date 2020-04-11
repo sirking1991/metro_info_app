@@ -55,8 +55,7 @@ class AppUser extends ChangeNotifier {
     dob = prefs.getString('dob');
     lguId = prefs.getInt('lgu_id');
 
-    print('firstName={$firstName} lastName={$lastName} mobile={$mobile} email={$email} dob={$dob}');
-    notifyListeners();
+    print('firstName={$firstName} lastName={$lastName} mobile={$mobile} email={$email} dob={$dob} lgu_id={$lguId}');
   }
 
   Map<String, dynamic> toJson() {

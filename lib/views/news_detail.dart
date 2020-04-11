@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class NewsDetail extends StatelessWidget {
+  var _news;
+  
+  NewsDetail(this._news);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,19 +39,22 @@ class NewsDetail extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    'Aenean aliquet, tellus et semper aliquet',
+                  Text(_news.subject,
                     style: TextStyle(
                         color: Colors.black.withOpacity(0.7),
                         fontWeight: FontWeight.bold,
                         fontSize: 32.0),
                   ),
                   Text(
-                    'Posted 2 hrs ago',
+                    _news.postingDate,
                     style: TextStyle(
                         color: Colors.grey,
                         fontSize: 15.0),
                   ),
+                  SizedBox(height: 20.0),
+                  Text(_news.content, style: TextStyle(
+                        color: Colors.black.withOpacity(0.7),                        
+                        fontSize: 20.0))
                 ],
               ),
             ),

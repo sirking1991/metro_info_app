@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_info/repository/regions.dart';
 import 'package:metro_info/views/news_detail.dart';
+import 'package:metro_info/views/news_list.dart';
 import 'package:metro_info/views/profile.dart';
 import 'package:metro_info/views/region_lgu_selector.dart';
 import 'package:metro_info/views/send_message.dart';
@@ -92,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               ],
             ),
-            NewsBox(),
+            NewsList(),
             EventsBox(),
           ],
         ),
@@ -111,53 +112,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class NewsBox extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0, right: 25.0, left: 25.0),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              offset: Offset(0.0, 3.0),
-              blurRadius: 15.0,
-            ),
-          ],
-        ),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-              child: Text(
-                'News',
-                style: TextStyle(
-                  color: Colors.black.withOpacity(0.7),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-            ListItem('Aenean aliquet, tellus et semper aliquet',
-                'Posted 2 hrs ago', Icons.mail_outline),
-            ListItem('Nam porta consectetur arcu', 'Posted 2 hrs ago',
-                Icons.mail_outline),
-            ListItem('Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-                'Posted 3 hrs ago', Icons.mail_outline),
-            ListItem('Etiam ac lectus vel enim viverra venenatis.',
-                'Posted 1 day ago', Icons.mail_outline),
-            ListItem('Duis eget orci quam. Vivamus a ultrices ex',
-                'Posted 1 day ago', Icons.mail_outline),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class EventsBox extends StatelessWidget {
   @override
@@ -229,8 +183,8 @@ class ListItem extends StatelessWidget {
       enabled: true,
       contentPadding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (BuildContext context) => NewsDetail()));
+        // Navigator.of(context).push(
+        //     MaterialPageRoute(builder: (BuildContext context) => NewsDetail()));
       },
     );
   }
