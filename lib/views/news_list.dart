@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metro_info/models/news.dart';
+import 'package:metro_info/networking/api_provider.dart';
 import 'package:metro_info/views/news_detail.dart';
 
 class NewsList extends StatefulWidget {
@@ -63,6 +64,24 @@ class ListItem extends StatefulWidget {
   var _news;
 
   ListItem(this._news);
+
+  @override
+  initState(){
+    print("initState");
+    _retrieveNews();
+  }
+
+  _retrieveNews(){
+    print("_retrieveNews()");
+    final ApiProvider _provider = ApiProvider();
+    try {
+      _provider.get("news/1/0").then((news) {
+        print(news);
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   @override
   _ListItemState createState() => _ListItemState();
