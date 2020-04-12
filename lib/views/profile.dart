@@ -17,50 +17,44 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     print('Profile build');
 
-    return Consumer<AppUser>(
-      builder: (context, appUser, child) {
-        return Scaffold(
-          key: _scaffoldKey,
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                // BEGIN: navbar
-                Container(
-                  width: double.infinity,
-                  child: Padding(
-                    padding:
-                        EdgeInsets.only(top: 30.0, right: 15.0, left: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.arrow_back),
-                          color: Colors.black45,
-                          iconSize: 30.0,
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
+    return Scaffold(
+      key: _scaffoldKey,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.only(top: 30.0, right: 15.0, left: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      color: Colors.black45,
+                      iconSize: 30.0,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                     ),
-                  ),
+                  ],
                 ),
-                // END: navbar
-
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 25.0, vertical: 30.0),
-                  child: Text(
-                    'Your Profile',
-                    style: TextStyle(
-                        color: Colors.black.withOpacity(0.7),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 32.0),
-                  ),
-                ),
-
-                Padding(
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 30.0),
+              child: Text(
+                'Your Profile',
+                style: TextStyle(
+                    color: Colors.black.withOpacity(0.7),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 32.0),
+              ),
+            ),
+            Consumer<AppUser>(
+              builder: (context, appUser, child) {
+                return Padding(
                   padding: EdgeInsets.all(20.0),
                   child: Form(
                     key: _formKey,
@@ -154,12 +148,12 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                   ),
-                ),
-              ],
+                );
+              },
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 
