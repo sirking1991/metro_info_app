@@ -49,4 +49,24 @@ class News {
     data['updated_at'] = this.updatedAt;
     return data;
   }
+
+  static List<News> getMapLGUs(List data) {
+    
+    List<News> datatemp = [];
+    data.forEach((item) {
+      datatemp.add(News(
+        id : item['id'],
+        lguId : item['lgu_id'],
+        status : item['status'],
+        postingDate : item['posting_date'],
+        postedBy : item['posted_by'],
+        subject : item['subject'],
+        content : item['content'],
+        broadcast : item['broadcast'],
+        createdAt : item['created_at'],
+        updatedAt : item['updated_at']
+        ));
+    });
+    return datatemp;
+  }  
 }

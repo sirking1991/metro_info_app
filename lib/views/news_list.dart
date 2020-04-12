@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:metro_info/models/news.dart';
 import 'package:metro_info/networking/api_provider.dart';
 import 'package:metro_info/views/news_detail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NewsList extends StatefulWidget {
   @override
@@ -9,13 +12,49 @@ class NewsList extends StatefulWidget {
 }
 
 class _NewsListState extends State<NewsList> {
-  List<News> _news = [
-    News(postingDate: "2020-04-11 08:22:00", subject: "News1: Aenean aliquet, tellus et semper aliquet", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit"),
-    News(postingDate: "2020-04-10 08:22:00", subject: "News2: Lorem ipsum dolor sit amet, consectetur ", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit"),
-    News(postingDate: "2020-04-09 08:22:00", subject: "News3: consectetur adipiscing elit Lorem ipsum dolor sit amet,", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit"),
-    News(postingDate: "2020-04-09 13:22:00", subject: "News4: dolor sit amet, consectetur adipiscing elit,", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit"),
-    News(postingDate: "2020-04-07 08:22:00", subject: "News5: Ladipiscing elit Lorem ipsum dolor sit amet,", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit"),
-  ];
+
+  int _lgu = 0;
+
+  SharedPreferences _prefs;
+
+  List<News> _news = [];
+
+  @override
+  void initState() {
+    _getPrefs();    
+    super.initState();
+  }
+
+  _getPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    _lgu = _prefs.getInt("lgu_id");
+
+    var tmp = _prefs.getString("news");
+    if(null != tmp) {      
+      List tmpNewsList = News.getMapLGUs(json.decode(tmp));
+      print("displaying news from cache");
+      setState(() => _news = tmpNewsList);
+    }
+
+    _getNewsFromAPI();
+  }
+
+  _getNewsFromAPI(){
+    ApiProvider().get("news/$_lgu")
+      .then((response){
+        print("displaying news from API");
+
+        // save the news to pref so we can load his later
+        _prefs.setString("news", json.encode(response));
+
+        // rebuild
+        setState(() =>_news = News.getMapLGUs(response));
+      })
+      .catchError((onError){
+        print(onError);
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
