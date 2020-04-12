@@ -32,7 +32,7 @@ class _NewsListState extends State<NewsList> {
 
     var tmp = _prefs.getString("news");
     if(null != tmp) {      
-      List tmpNewsList = News.getMapLGUs(json.decode(tmp));
+      List tmpNewsList = News.getMapNews(json.decode(tmp));
       print("displaying news from cache");
       setState(() => _news = tmpNewsList);
     }
@@ -49,7 +49,7 @@ class _NewsListState extends State<NewsList> {
         _prefs.setString("news", json.encode(response));
 
         // rebuild
-        setState(() =>_news = News.getMapLGUs(response));
+        setState(() =>_news = News.getMapNews(response));
       })
       .catchError((onError){
         print(onError);

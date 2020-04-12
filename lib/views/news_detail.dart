@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:metro_info/models/news.dart';
 
 class NewsDetail extends StatelessWidget {
-  var _news;
+  News _news;
   
   NewsDetail(this._news);
 

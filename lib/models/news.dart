@@ -50,7 +50,7 @@ class News {
     return data;
   }
 
-  static List<News> getMapLGUs(List data) {
+  static List<News> getMapNews(List data) {
     
     List<News> datatemp = [];
     data.forEach((item) {
