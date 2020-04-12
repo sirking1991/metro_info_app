@@ -13,7 +13,6 @@ class RegionLGUSelector extends StatefulWidget {
   RegionLGUSelector({Key key, this.isIntial = false}) : super(key: key);
   @override
   _RegionLGUSelector createState() {
-    // TODO: implement createState
     return _RegionLGUSelector();
   }
 }
@@ -36,13 +35,30 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
 
   @override
   void initState() {}
+
   //this function is for storing the data in the sharedPrefreces and to show snackbar and navigate .
   void saveData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(_lguValue);
-    if(_lguValue.id==null){
+    if (_lguValue.id == null) {
       //acknowlege the user to first select lgus
-      print("please select the lgus first");
+      print("Please select the lgus first");
+      Alert(
+              buttons: [
+            DialogButton(
+              child: Text(
+                "OK",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.pop(context),
+              width: 120,
+            )
+          ],
+              type: AlertType.info,
+              context: context,
+              title: "Metro_Info",
+              desc: "Please select the lgus first")
+          .show();
+
       return;
     }
     try {
@@ -55,6 +71,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
       //Later in code we can handle the error on faiure
     }
     _displaySnackBar(context, 'Region/LGU selected');
+
     //we have added the time because we need to show of snack bar to user before the navigation
     Timer(Duration(seconds: 2), () {
       Navigator.of(context).push(
@@ -65,7 +82,6 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
   // this function is for making the list of map into list of region instance and setting the downdown items value
   List makeRegionList(List response) {
     List _region = Region.getMapRegion(response);
-    // _region.add(_regionValue);
     return _region;
   }
 
