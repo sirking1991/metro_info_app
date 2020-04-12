@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:metro_info/networking/api_provider.dart';
 import 'package:metro_info/models/app_user.dart';
 import 'package:metro_info/views/main.dart';
+import 'package:metro_info/views/profile.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SendMessage extends StatefulWidget {
   @override
@@ -16,6 +18,38 @@ class _SendMessageState extends State<SendMessage> {
   String _message;
 
   Message msg = Message();
+
+  @override
+  void initState() {
+    _checkAppUserRegistration();
+
+    super.initState();
+  }
+
+  _checkAppUserRegistration() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    if (null == pref.getInt("lgu_id") ||
+        null == pref.getString("first_name") ||
+        null == pref.getString("last_name") ||
+        null == pref.getString("email") ||
+        null == pref.getString("mobile") ||
+        null == pref.getString("device_id")) {
+      Alert(
+          title: "You need to register to be able to send message",
+          context: context,
+          buttons: [
+            DialogButton(
+              child: Text("Okay"),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => Profile()));
+              },
+            )
+          ]).show();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
