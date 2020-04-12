@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:metro_info/networking/api_provider.dart';
-import 'package:metro_info/models/app_user.dart';
 import 'package:metro_info/views/main.dart';
 import 'package:metro_info/views/profile.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +35,7 @@ class _SendMessageState extends State<SendMessage> {
         null == pref.getString("mobile") ||
         null == pref.getString("device_id")) {
       Alert(
-          title: "You need to register to be able to send message",
+          title: "Update your profile to send messages to LGU",
           context: context,
           buttons: [
             DialogButton(

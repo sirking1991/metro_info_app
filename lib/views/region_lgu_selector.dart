@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:metro_info/views/main.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -30,11 +28,8 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
       regionShortName: " ",
       slug: " ",
       updatedAt: " ");
-  bool done =
-      false; //this will be used to keep the initial value of the application
-
-  @override
-  void initState() {}
+  //this will be used to keep the initial value of the application
+  bool done = false; 
 
   //this function is for storing the data in the sharedPrefreces and to show snackbar and navigate .
   void saveData() async {
@@ -140,7 +135,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
       print(error);
       return false;
     }
-    ;
+    
   }
 
   @override

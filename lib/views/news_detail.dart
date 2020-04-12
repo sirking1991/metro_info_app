@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:metro_info/models/news.dart';
 
-class NewsDetail extends StatelessWidget {
+class NewsDetail extends StatefulWidget {
   News _news;
   
   NewsDetail(this._news);
 
   @override
+  _NewsDetailState createState() => _NewsDetailState();
+}
+
+class _NewsDetailState extends State<NewsDetail> {
+  @override
   Widget build(BuildContext context) {
-    var jiffy = Jiffy(DateTime.parse( _news.postingDate))
+    var jiffy = Jiffy(DateTime.parse( widget._news.postingDate))
       ..startOf(Units.HOUR);
 
     return Scaffold(
@@ -44,7 +49,7 @@ class NewsDetail extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(_news.subject,
+                  Text(widget._news.subject,
                     style: TextStyle(
                         color: Colors.black.withOpacity(0.7),
                         fontWeight: FontWeight.bold,
@@ -57,7 +62,7 @@ class NewsDetail extends StatelessWidget {
                         fontSize: 15.0),
                   ),
                   SizedBox(height: 20.0),
-                  Text(_news.content, style: TextStyle(
+                  Text(widget._news.content, style: TextStyle(
                         color: Colors.black.withOpacity(0.7),                        
                         fontSize: 20.0))
                 ],

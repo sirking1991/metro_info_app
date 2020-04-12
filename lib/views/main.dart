@@ -1,11 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metro_info/networking/api_provider.dart';
 import 'package:metro_info/views/events_list.dart';
 import 'package:metro_info/views/news_list.dart';
 import 'package:metro_info/views/profile.dart';
-import 'package:metro_info/views/region_lgu_selector.dart';
 import 'package:metro_info/views/send_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
