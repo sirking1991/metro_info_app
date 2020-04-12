@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:metro_info/networking/api_provider.dart';
 import 'package:metro_info/models/app_user.dart';
+import 'package:metro_info/views/main.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SendMessage extends StatefulWidget {
   @override
@@ -92,39 +94,54 @@ class _SendMessageState extends State<SendMessage> {
                     Consumer<AppUser>(builder: (context, appUser, child) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 40.0),
-                        child: RaisedButton(
+                        child: DialogButton(
                           onPressed: () {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (_) {
-                                  return AlertDialog(
-                                    content: Text("Send message?"),
-                                    actions: <Widget>[
-                                      FlatButton(
+                            print("sending message");
+                            Alert(
+                                    style: AlertStyle(isCloseButton: false),
+                                    buttons: [
+                                      DialogButton(
+                                        child: Text(
+                                          "No",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        ),
                                         onPressed: () {
-                                          Navigator.of(context).pop();
-                                        }, child: Text("No"),
+                                          Navigator.pop(context);
+                                        },
                                       ),
-                                      FlatButton(
-                                        autofocus: true,
+                                      DialogButton(
+                                        child: Text(
+                                          "Yes",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        ),
                                         onPressed: () {
                                           sendMessage(appUser);
-                                          Navigator.of(context).pop();
-                                        }, child: Text("Yes"),
-                                      )
+                                          Navigator.pop(context);
+                                        },
+                                      ),
                                     ],
-                                  );
-                                });
+                                    context: context,
+                                    title: "Send message?")
+                                .show();
                           },
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Icon(Icons.send),
+                              Icon(
+                                Icons.send,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 10.0,
                               ),
-                              Text('Send'),
+                              Text(
+                                'Send',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ],
                           ),
                         ),
@@ -140,7 +157,7 @@ class _SendMessageState extends State<SendMessage> {
     );
   }
 
-  sendMessage(AppUser appUser) {
+  sendMessage(AppUser appUser) async {
     msg.deviceId = appUser.deviceId;
     msg.lguId = appUser.lguId;
     msg.message = _message;
@@ -153,19 +170,35 @@ class _SendMessageState extends State<SendMessage> {
         appUser.lguId.toString() +
         "-" +
         appUser.deviceId;
-    var bytes = utf8.encode(validationStr);
 
+    var bytes = utf8.encode(validationStr);
     var hmacSha256 = new Hmac(sha256, key); // HMAC-SHA256
     var digest = hmacSha256.convert(bytes);
 
-    print("validationStr=$validationStr SHA256=" + digest.toString());
-
     msg.validationToken = digest.toString();
 
-    print("message=" + _message);
-    final ApiProvider _provider = ApiProvider();
+    FocusScope.of(context).requestFocus(FocusNode()); // hides keyboard
+
     try {
-      _provider.post("send_message", msg.toJson()).then((onValue) {});
+      ApiProvider().post("send_message", msg.toJson()).whenComplete(() {
+        print("message sent");
+        Alert(
+            context: context,
+            style: AlertStyle(isCloseButton: false),
+            title: "Message sent",
+            buttons: [
+              DialogButton(
+                  child: Text(
+                    "Okay ",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (BuildContext context) => MyHomePage()));
+                  })
+            ]).show();
+      });
     } catch (e) {
       print(e.toString());
     }

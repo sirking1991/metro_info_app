@@ -55,28 +55,39 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
           ],
               type: AlertType.info,
               context: context,
-              title: "Metro_Info",
-              desc: "Please select the lgus first")
+              title: "metro_info",
+              desc: "Please select LGU")
           .show();
 
       return;
     }
     try {
       prefs.setInt('lgu_id', _lguValue.id);
-      prefs.setString("name", _lguValue.name);
-      prefs.setString("slug", _lguValue.slug);
+      prefs.setString("lgu_name", _lguValue.name);
+      prefs.setString("lgu_slug", _lguValue.slug);
       prefs.setString("region_short_name", _lguValue.regionShortName);
     } catch (error) {
       print(error);
       //Later in code we can handle the error on faiure
     }
-    _displaySnackBar(context, 'Region/LGU selected');
 
-    //we have added the time because we need to show of snack bar to user before the navigation
-    Timer(Duration(seconds: 2), () {
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) => MyHomePage()));
-    });
+    Alert(
+        context: context,
+        style: AlertStyle(isCloseButton: false),
+        title: "Preferred Region & LGU saved",
+        buttons: [
+          DialogButton(
+              child: Text(
+                "Okay ",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) => MyHomePage()));
+              })
+        ]).show();
+
   }
 
   // this function is for making the list of map into list of region instance and setting the downdown items value
@@ -101,7 +112,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
     });
   }
 
-  prepareDropDownDAta() async {
+  prepareDropDownData() async {
     List _regionDataone;
     List _tempRegionList;
     List _lGUsDataone;
@@ -138,7 +149,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
       key: _scaffoldKey,
       body: SingleChildScrollView(
           child: FutureBuilder(
-              future: prepareDropDownDAta(),
+              future: prepareDropDownData(),
               builder: (context, AsyncSnapshot snapshot) {
                 print(snapshot);
                 if (snapshot.hasData) {
@@ -173,11 +184,9 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                                                 width: 120,
                                               )
                                             ],
-                                              type: AlertType.info,
                                               context: context,
-                                              title: "Metro_Info",
-                                              desc:
-                                                  "Please select Region to procced")
+                                              title:
+                                                  "Please select Region to proceed")
                                           .show()
                                       : Navigator.of(context).pop();
                                 },
@@ -190,7 +199,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 25.0, vertical: 30.0),
                         child: Text(
-                          'Region & LGU Selection',
+                          'Select Region & LGU',
                           style: TextStyle(
                               color: Colors.black.withOpacity(0.7),
                               fontWeight: FontWeight.bold,
@@ -238,7 +247,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(25.0),
-                        child: RaisedButton(
+                        child: DialogButton(
                           child: Text('Save'),
                           onPressed: () => saveData(),
                         ),
@@ -271,11 +280,4 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
     );
   }
 
-  void _displaySnackBar(BuildContext context, String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 2),
-    );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
 }

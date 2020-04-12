@@ -13,18 +13,16 @@ class Region {
     );
   }
 
-   static  List<Region> getMapRegion (List data) {
+  static List<Region> getMapRegion(List data) {
     // print(data);
-    List<Region> datatemp =[];
-    data.forEach((item){
-      datatemp.add( Region(
-      id: item['id'],
-      name: item['name'],
-      shortName: item['short_name'],
-    ));
-    // print(datatemp);
-    
-    
+    List<Region> datatemp = [];
+    data.forEach((item) {
+      datatemp.add(Region(
+        id: item['id'],
+        name: item['name'],
+        shortName: item['short_name'],
+      ));
+      // print(datatemp);
     });
     return datatemp;
   }

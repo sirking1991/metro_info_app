@@ -1,48 +1,59 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metro_info/repository/regions.dart';
-import 'package:metro_info/views/news_detail.dart';
+import 'package:metro_info/networking/api_provider.dart';
 import 'package:metro_info/views/news_list.dart';
 import 'package:metro_info/views/profile.dart';
 import 'package:metro_info/views/region_lgu_selector.dart';
 import 'package:metro_info/views/send_message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
-
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   // TODO: These should be taken from SharedPreferences
   Color _primaryColor = Color.fromRGBO(255, 82, 48, 1);
-  String _lguLogoPath = 'https://upload.wikimedia.org/wikipedia/en/4/48/Ph_seal_ncr_pasay.png';
-  String _regionName = 'National Capital Region';
-  String _lguName = 'Pasay City';
+  String _lguLogoPath =
+      'https://upload.wikimedia.org/wikipedia/en/4/48/Ph_seal_ncr_pasay.png';
+  String _regionName = '';
+  String _lguName = '';
+
+  @override
+  void initState() {
+    _getLGUDetails();
+    super.initState();
+  }
+
+  _getLGUDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _lguName = prefs.getString("lgu_name");
+      _regionName = prefs.getString("region_short_name");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: _primaryColor,
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          color: Colors.white,
-          iconSize: 30.0,
-          onPressed: () {
+        // leading: IconButton(
+        //   icon: Icon(Icons.menu),
+        //   color: Colors.white,
+        //   iconSize: 30.0,
+        //   onPressed: () {
 
-            // RegionsRepository regionsRepository = RegionsRepository();
-            // print(regionsRepository.fetchRegions());
+        //       Navigator.of(context).push(MaterialPageRoute(
+        //           builder: (BuildContext context) => RegionLGUSelector(isIntial: false,)));
 
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => RegionLGUSelector(isIntial: false,)));            
+        //     // TODO: Should display drawer with LGU pages
 
-          },
-        ),
+        //   },
+        // ),
         title: Text(
           'metro-info',
           style: TextStyle(fontSize: 30.0, color: Colors.white),
@@ -76,17 +87,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         width: 120.0,
                       ),
                       padding:
-                      EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
+                          EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(_lguName,
                             style:
-                            TextStyle(color: Colors.white, fontSize: 25.0)),
+                                TextStyle(color: Colors.white, fontSize: 25.0)),
                         Text(_regionName,
                             style:
-                            TextStyle(color: Colors.white, fontSize: 15.0)),
+                                TextStyle(color: Colors.white, fontSize: 15.0)),
                       ],
                     ),
                   ],
@@ -104,14 +115,13 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (BuildContext context) => SendMessage()));
         },
-        tooltip: 'Send ',
+        tooltip: 'Send',
         child: Icon(Icons.message),
         foregroundColor: Colors.white,
       ),
     );
   }
 }
-
 
 class EventsBox extends StatelessWidget {
   @override
