@@ -57,7 +57,7 @@ class _NewsListState extends State<NewsList> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return Padding(
       padding: EdgeInsets.only(top: 10.0, right: 25.0, left: 25.0),
       child: Container(
@@ -89,7 +89,7 @@ class _NewsListState extends State<NewsList> {
             Column(              
               children: <Widget>[
                 ..._news.map((n){
-                  return ListItem(n);
+                  return ListItem(n, _prefs);
                 }),                
               ],
             ),
@@ -102,8 +102,9 @@ class _NewsListState extends State<NewsList> {
 
 class ListItem extends StatefulWidget {
   var _news;
+  var _prefs;
 
-  ListItem(this._news);
+  ListItem(this._news, this._prefs);
 
   @override
   _ListItemState createState() => _ListItemState();
@@ -112,13 +113,13 @@ class ListItem extends StatefulWidget {
 class _ListItemState extends State<ListItem> {
   @override
   Widget build(BuildContext context) {
-    var _icon = Icons.mail_outline;
+    bool read = null != widget._prefs.getBool("news_read_" + widget._news.id.toString());
 
     var jiffy = Jiffy(DateTime.parse( widget._news.postingDate))
       ..startOf(Units.HOUR);
 
     return ListTile(
-      leading: Icon(_icon, size: 30.0, ),
+      leading: Icon(read ? Icons.mail_outline: Icons.mail, size: 30.0, color: read ? Colors.grey : Colors.orange,),
       title: Text(
         widget._news.subject,
         style: TextStyle(fontSize: 20.0),

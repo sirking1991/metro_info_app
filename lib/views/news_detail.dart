@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:metro_info/models/news.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NewsDetail extends StatefulWidget {
   News _news;
   
-  NewsDetail(this._news);
+  NewsDetail(this._news){    
+    _markAsRead();
+  }
+
+  _markAsRead() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setBool("news_read_" + _news.id.toString(), true);
+  }
 
   @override
   _NewsDetailState createState() => _NewsDetailState();
