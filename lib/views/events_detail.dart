@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:metro_info/models/events.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class EventsDetail extends StatelessWidget {
+class EventsDetail extends StatefulWidget {
   Events _events;
   
-  EventsDetail(this._events);
+  EventsDetail(this._events){    
+    _markAsRead();
+  }
+
+  _markAsRead() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setBool("events_read_" + _events.id.toString(), true);
+  }  
 
   @override
+  _EventsDetailState createState() => _EventsDetailState();
+}
+
+class _EventsDetailState extends State<EventsDetail> {
+  @override
   Widget build(BuildContext context) {
-    var jiffyEventFrom = Jiffy(DateTime.parse( _events.eventFrom));
-    var jiffyEventTo = Jiffy(DateTime.parse( _events.eventTo));
+    var jiffyEventFrom = Jiffy(DateTime.parse( widget._events.eventFrom));
+    var jiffyEventTo = Jiffy(DateTime.parse( widget._events.eventTo));
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -44,7 +57,7 @@ class EventsDetail extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(_events.name,
+                  Text(widget._events.name,
                     style: TextStyle(
                         color: Colors.black.withOpacity(0.7),
                         fontWeight: FontWeight.bold,
@@ -57,7 +70,7 @@ class EventsDetail extends StatelessWidget {
                         fontSize: 15.0),
                   ),
                   SizedBox(height: 20.0),
-                  Text(_events.content, style: TextStyle(
+                  Text(widget._events.content, style: TextStyle(
                         color: Colors.black.withOpacity(0.7),                        
                         fontSize: 20.0))
                 ],

@@ -89,7 +89,7 @@ class _EventsListState extends State<EventsList> {
             Column(              
               children: <Widget>[
                 ..._events.map((n){
-                  return ListItem(n);
+                  return ListItem(n, _prefs);
                 }),                
               ],
             ),
@@ -102,8 +102,9 @@ class _EventsListState extends State<EventsList> {
 
 class ListItem extends StatefulWidget {
   var _events;
+  var _prefs;
 
-  ListItem(this._events);
+  ListItem(this._events, this._prefs);
 
   @override
   _ListItemState createState() => _ListItemState();
@@ -112,13 +113,13 @@ class ListItem extends StatefulWidget {
 class _ListItemState extends State<ListItem> {
   @override
   Widget build(BuildContext context) {
-    var _icon = Icons.mail_outline;
+    bool read = null != widget._prefs.getBool("events_read_" + widget._events.id.toString());
 
     var jiffyEventFrom = Jiffy(DateTime.parse( widget._events.eventFrom));
     var jiffyEventTo = Jiffy(DateTime.parse( widget._events.eventTo));
 
     return ListTile(
-      leading: Icon(_icon, size: 30.0, ),
+      leading: Icon(read ? Icons.mail_outline: Icons.mail, size: 30.0, color: read ? Colors.grey : Colors.orange,),
       title: Text(
         widget._events.name,
         style: TextStyle(fontSize: 20.0),
