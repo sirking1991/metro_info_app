@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:metro_info/networking/api_provider.dart';
-import 'package:metro_info/views/main.dart';
 import 'package:metro_info/views/profile.dart';
-import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -28,12 +26,7 @@ class _SendMessageState extends State<SendMessage> {
   _checkAppUserRegistration() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
 
-    if (null == pref.getInt("lgu_id") ||
-        null == pref.getString("first_name") ||
-        null == pref.getString("last_name") ||
-        null == pref.getString("email") ||
-        null == pref.getString("mobile") ||
-        null == pref.getString("device_id")) {
+    if (null == pref.getString("device_id")) {
       Alert(
           title: "Update your profile to send messages to LGU",
           context: context,
@@ -42,8 +35,10 @@ class _SendMessageState extends State<SendMessage> {
               child: Text("Okay"),
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => Profile()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Profile()),
+                );
               },
             )
           ]).show();
@@ -92,96 +87,77 @@ class _SendMessageState extends State<SendMessage> {
 
             Padding(
               padding: EdgeInsets.all(20.0),
-              child: Form(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Your message'),
-                          TextField(
-                            maxLines: 3,
-                            maxLength: 256,
-                            onChanged: (String v) {
-                              _message = v;
-                            },
-                          ),
-                        ]),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    // Row(
-                    //   children: <Widget>[
-                    //     Icon(Icons.camera),
-                    //     SizedBox(
-                    //       width: 10.0,
-                    //     ),
-                    //     Text(
-                    //       'Attach photo',
-                    //       style: TextStyle(fontSize: 18.0),
-                    //     )
-                    //   ],
-                    // ),
-                    Consumer<AppUser>(builder: (context, appUser, child) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40.0),
-                        child: DialogButton(
-                          onPressed: () {
-                            print("sending message");
-                            Alert(
-                                    style: AlertStyle(isCloseButton: false),
-                                    buttons: [
-                                      DialogButton(
-                                        child: Text(
-                                          "No",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                      DialogButton(
-                                        child: Text(
-                                          "Yes",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20),
-                                        ),
-                                        onPressed: () {
-                                          sendMessage(appUser);
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                    context: context,
-                                    title: "Send message?")
-                                .show();
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Your message'),
+                        TextField(
+                          maxLines: 3,
+                          maxLength: 256,
+                          onChanged: (String v) {
+                            _message = v;
                           },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Icon(
-                                Icons.send,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              Text(
-                                'Send',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
                         ),
-                      );
-                    }),
-                  ],
-                ),
+                      ]),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 40.0),
+                    child: DialogButton(
+                      onPressed: () {
+                        Alert(
+                                style: AlertStyle(isCloseButton: false),
+                                buttons: [
+                                  DialogButton(
+                                    child: Text(
+                                      "No",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  DialogButton(
+                                    child: Text(
+                                      "Yes",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      sendMessage();
+                                    },
+                                  ),
+                                ],
+                                context: context,
+                                title: "Send message?")
+                            .show();
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(
+                            Icons.send,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Text(
+                            'Send',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             )
           ],
@@ -190,19 +166,18 @@ class _SendMessageState extends State<SendMessage> {
     );
   }
 
-  sendMessage(AppUser appUser) async {
-    msg.deviceId = appUser.deviceId;
-    msg.lguId = appUser.lguId;
+  sendMessage() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    msg.deviceId = pref.getString("device_id");
+    msg.lguId = pref.getInt("lgu_id");
     msg.message = _message;
 
     var now = new DateTime.now();
 
     var key = utf8.encode('singlecord');
-    final validationStr = now.day.toString() +
-        "-" +
-        appUser.lguId.toString() +
-        "-" +
-        appUser.deviceId;
+    final validationStr =
+        now.day.toString() + "-" + msg.lguId.toString() + "-" + msg.deviceId;
 
     var bytes = utf8.encode(validationStr);
     var hmacSha256 = new Hmac(sha256, key); // HMAC-SHA256
@@ -212,29 +187,38 @@ class _SendMessageState extends State<SendMessage> {
 
     FocusScope.of(context).requestFocus(FocusNode()); // hides keyboard
 
-    try {
-      ApiProvider().post("send_message", msg.toJson()).whenComplete(() {
-        print("message sent");
-        Alert(
-            context: context,
-            style: AlertStyle(isCloseButton: false),
-            title: "Message sent",
-            buttons: [
-              DialogButton(
-                  child: Text(
-                    "Okay ",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (BuildContext context) => MyHomePage()));
-                  })
-            ]).show();
-      });
-    } catch (e) {
-      print(e.toString());
-    }
+    ApiProvider().post("send_message", msg.toJson()).then((response) {
+      Alert(
+          context: context,
+          title: "Message sent",
+          type: AlertType.success,
+          buttons: [
+            DialogButton(
+              child: Text("Okay"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            )
+          ]).show();
+    }).catchError((error) {
+      Alert(
+          context: context,
+          title: "Error",
+          desc: "An error occured while sending your message. Try again later.",
+          type: AlertType.error,
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Okay",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ]).show();
+    });
   }
 }
 

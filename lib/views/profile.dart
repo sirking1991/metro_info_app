@@ -137,6 +137,7 @@ class _ProfileState extends State<Profile> {
     _appUser.dob = _dob.text.trim();
 
     // save to pref
+    _pref.setString("device_id", _appUser.deviceId);
     _pref.setString("first_name", _appUser.firstName);
     _pref.setString("last_name", _appUser.lastName);
     _pref.setString("mobile", _appUser.mobile);
@@ -161,7 +162,7 @@ class _ProfileState extends State<Profile> {
         Alert(
           context: context,
           title: "Error",
-          desc: "An error occured while registering your profile",
+          desc: "An error occured while registering your profile. Try again later.",
           type: AlertType.error,
           buttons: [
             DialogButton(
