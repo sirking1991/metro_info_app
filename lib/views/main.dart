@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_info/networking/api_provider.dart';
+import 'package:metro_info/views/events_list.dart';
 import 'package:metro_info/views/news_list.dart';
 import 'package:metro_info/views/profile.dart';
 import 'package:metro_info/views/region_lgu_selector.dart';
@@ -105,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             NewsList(),
-            EventsBox(),
+            EventsList(),
           ],
         ),
       ),
@@ -119,83 +120,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.message),
         foregroundColor: Colors.white,
       ),
-    );
-  }
-}
-
-class EventsBox extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0, right: 25.0, left: 25.0),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              offset: Offset(0.0, 3.0),
-              blurRadius: 15.0,
-            ),
-          ],
-        ),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-              child: Text(
-                'Events',
-                style: TextStyle(
-                  color: Colors.black.withOpacity(0.7),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-            ListItem('Aenean aliquet, tellus et semper aliquet',
-                'Apr 3, 2020 2pm - 3pm', Icons.today),
-            ListItem('Nam porta consectetur arcu', 'Apr 9, 2020 8am - 12pm',
-                Icons.today),
-            ListItem('Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-                '3 hrs ago', Icons.today),
-            ListItem('Etiam ac lectus vel enim viverra venenatis.', '1 day ago',
-                Icons.today),
-            ListItem('Donec fermentum sit amet nibh et vehicula.', '2 days ago',
-                Icons.today),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ListItem extends StatelessWidget {
-  final _title;
-  final _subTitle;
-  final _icon;
-
-  const ListItem(this._title, this._subTitle, this._icon);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        _icon,
-        size: 30.0,
-      ),
-      title: Text(
-        _title,
-        style: TextStyle(fontSize: 20.0),
-      ),
-      subtitle: Text(_subTitle),
-      enabled: true,
-      contentPadding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
-      onTap: () {
-        // Navigator.of(context).push(
-        //     MaterialPageRoute(builder: (BuildContext context) => NewsDetail()));
-      },
     );
   }
 }
