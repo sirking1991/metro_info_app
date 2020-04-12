@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 
 class NewsDetail extends StatelessWidget {
   var _news;
@@ -7,6 +8,9 @@ class NewsDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var jiffy = Jiffy(DateTime.parse( _news.postingDate))
+      ..startOf(Units.HOUR);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -46,7 +50,7 @@ class NewsDetail extends StatelessWidget {
                         fontSize: 32.0),
                   ),
                   Text(
-                    _news.postingDate,
+                    jiffy.fromNow() + ', ' + jiffy.format('MMM do yyyy'),
                     style: TextStyle(
                         color: Colors.grey,
                         fontSize: 15.0),

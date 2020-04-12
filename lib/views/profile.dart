@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:metro_info/models/app_user.dart';
+import 'package:metro_info/views/main.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -139,7 +141,24 @@ class _ProfileState extends State<Profile> {
 
                                 appUser.save();
 
-                                _displaySnackBar(context, 'Profile saved');
+                                Alert(
+                                    context: context,
+                                    title: "Registration updated",
+                                    buttons: [
+                                      DialogButton(
+                                        child: Text("Okay"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          MyHomePage()));
+                                        },
+                                      )
+                                    ]).show();
+
+                                //_displaySnackBar(context, 'Profile saved');
                               }
                             },
                             child: Text('Update'),
@@ -157,8 +176,4 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  void _displaySnackBar(BuildContext context, String message) {
-    final snackBar = SnackBar(content: Text(message));
-    _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
 }

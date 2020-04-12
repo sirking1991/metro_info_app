@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:metro_info/models/news.dart';
 import 'package:metro_info/networking/api_provider.dart';
 import 'package:metro_info/views/news_detail.dart';
@@ -105,24 +106,6 @@ class ListItem extends StatefulWidget {
   ListItem(this._news);
 
   @override
-  initState(){
-    print("initState");
-    _retrieveNews();
-  }
-
-  _retrieveNews(){
-    print("_retrieveNews()");
-    final ApiProvider _provider = ApiProvider();
-    try {
-      _provider.get("news/1/0").then((news) {
-        print(news);
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  @override
   _ListItemState createState() => _ListItemState();
 }
 
@@ -130,7 +113,9 @@ class _ListItemState extends State<ListItem> {
   @override
   Widget build(BuildContext context) {
     var _icon = Icons.mail_outline;
-    var _postingDateString  = widget._news.postingDate;    
+
+    var jiffy = Jiffy(DateTime.parse( widget._news.postingDate))
+      ..startOf(Units.HOUR);
 
     return ListTile(
       leading: Icon(_icon, size: 30.0, ),
@@ -138,7 +123,7 @@ class _ListItemState extends State<ListItem> {
         widget._news.subject,
         style: TextStyle(fontSize: 20.0),
       ),
-      subtitle: Text(_postingDateString),
+      subtitle: Text(jiffy.fromNow() ),
       enabled: true,
       contentPadding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
       onTap: () {
