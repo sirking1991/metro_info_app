@@ -6,6 +6,7 @@ import 'package:metro_info/views/news_list.dart';
 import 'package:metro_info/views/profile.dart';
 import 'package:metro_info/views/send_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:share/share.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -58,6 +59,14 @@ class _MyHomePageState extends State<MyHomePage> {
           style: TextStyle(fontSize: 30.0, color: Colors.white),
         ),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.share),
+            color: Colors.white,
+            iconSize: 30.0,
+            onPressed: () {
+              Share.share('Hey! check out this $_lguName app. https://metro-info.herokuapp.com');
+            },
+          ),
           IconButton(
             icon: Icon(Icons.person_outline),
             color: Colors.white,
