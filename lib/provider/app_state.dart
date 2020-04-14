@@ -75,7 +75,6 @@ class AppState extends ChangeNotifier {
   SharedPreferences get pref => _pref;
 
   init() {
-    print("AppState: constructor");
     _setGlobalVars();
   }
 
@@ -84,7 +83,6 @@ class AppState extends ChangeNotifier {
   }
 
   _setGlobalVars() async {
-    print("AppState: _setGlobalVars()");
     _pref = await SharedPreferences.getInstance();
 
     _lguId = _pref.getInt("lgu_id");

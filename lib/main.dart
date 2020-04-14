@@ -19,10 +19,6 @@ void main() {
 class MyApp extends StatelessWidget {
   Future lguChecker() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(prefs);
-    print(prefs.getString("region_short_name"));
-
-    // return prefs.getString('first_name');
     return prefs.getInt("lgu_id");
   }
 
@@ -32,7 +28,6 @@ class MyApp extends StatelessWidget {
       future: lguChecker(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          print(snapshot.data);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'metro-info',

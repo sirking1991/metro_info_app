@@ -14,12 +14,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // TODO: These should be taken from SharedPreferences
-  Color _primaryColor = Color.fromRGBO(255, 82, 48, 1);
-  String _lguLogoPath =
-      'https://upload.wikimedia.org/wikipedia/en/4/48/Ph_seal_ncr_pasay.png';
-  String _regionName = '';
-  String _lguName = '';
 
   @override
   void initState() {
