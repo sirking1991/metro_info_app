@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:metro_info/provider/app_state.dart';
 import 'package:metro_info/views/main.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:metro_info/networking/api_provider.dart';
 import "package:metro_info/models/region.dart";
@@ -18,10 +20,10 @@ class RegionLGUSelector extends StatefulWidget {
 class _RegionLGUSelector extends State<RegionLGUSelector> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Region> _religonData = [];
-  List<LGUs> _lgusData = [];
+  List<LGU> _lgusData = [];
   Region _regionValue; //Initial value
-  LGUs _lguValue; //initial value of LGUS
-  LGUs _initialValue = LGUs(
+  LGU _lguValue; //initial value of LGUS
+  LGU _initialValue = LGU(
       id: null,
       name: "select LGUs",
       createdAt: null,
@@ -61,6 +63,9 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
       prefs.setString("lgu_name", _lguValue.name);
       prefs.setString("lgu_slug", _lguValue.slug);
       prefs.setString("region_short_name", _lguValue.regionShortName);
+
+      Provider.of<AppState>(context, listen: false).reset();
+
     } catch (error) {
       print(error);
       //Later in code we can handle the error on faiure
@@ -95,7 +100,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
   void getLGUs(lguValue) {
     ApiProvider().get("lgus/" + lguValue.shortName).then((response) {
       print(response);
-      List _lGUsDataList = LGUs.getMapLGUs(response);
+      List _lGUsDataList = LGU.getMapLGUs(response);
       _lGUsDataList.add(_initialValue);
       setState(() {
         _lgusData = _lGUsDataList;
@@ -118,7 +123,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
         _regionValue = _tempRegionList[0];
         _lGUsDataone =
             await ApiProvider().get("lgus/" + _regionValue.shortName);
-        List _lGUsDataList = LGUs.getMapLGUs(_lGUsDataone);
+        List _lGUsDataList = LGU.getMapLGUs(_lGUsDataone);
 
         _lgusData = _lGUsDataList;
         _lgusData.add(_initialValue);
@@ -232,8 +237,8 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                               _lguValue = newValue;
                             });
                           },
-                          items: _lgusData.map<DropdownMenuItem<LGUs>>((value) {
-                            return DropdownMenuItem<LGUs>(
+                          items: _lgusData.map<DropdownMenuItem<LGU>>((value) {
+                            return DropdownMenuItem<LGU>(
                               value: value,
                               child: Text(value.name),
                             );

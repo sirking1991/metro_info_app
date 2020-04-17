@@ -6,12 +6,13 @@ import 'dart:async';
 
 class ApiProvider {
   //final String _baseUrl = "https://colossal-madrid-16udig9usgxj.vapor-farm-b1.com/api/";
-  final String _baseUrl = "https://5f57d40d.ap.ngrok.io/api/";
+  final String _baseUrl = "https://metro-info.herokuapp.com/api/";
+  // final String _baseUrl = "https://5f57d40d.ap.ngrok.io/api/";
 
   Future<dynamic> get(String url) async {
     var responseJson;
     try {
-      print('GETting date from ' + _baseUrl + url);
+      print('GETting data from ' + _baseUrl + url);
       final response = await http.get(_baseUrl + url);
       responseJson = _response(response);
     } on SocketException {

@@ -1,24 +1,30 @@
-class LGUs {
+class LGU {
   int id;
   String regionShortName;
   String name;
   String slug;
-  Null createdAt;
+  String logoUrl;
+  String color;
+  String createdAt;
   String updatedAt;
 
-  LGUs(
+  LGU(
       {this.id,
       this.regionShortName,
       this.name,
       this.slug,
+      this.logoUrl,
+      this.color,
       this.createdAt,
       this.updatedAt});
 
-  LGUs.fromJson(Map<String, dynamic> json) {
+  LGU.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     regionShortName = json['region_short_name'];
     name = json['name'];
     slug = json['slug'];
+    logoUrl = json['logo_url'];
+    color = json['color'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -29,23 +35,26 @@ class LGUs {
     data['region_short_name'] = this.regionShortName;
     data['name'] = this.name;
     data['slug'] = this.slug;
+    data['logo_url'] = this.logoUrl;
+    data['color'] = this.color;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;
   }
 
-  static List<LGUs> getMapLGUs(List data) {
+  static List<LGU> getMapLGUs(List data) {
     
-    List<LGUs> datatemp = [];
+    List<LGU> datatemp = [];
     data.forEach((item) {
-      datatemp.add(LGUs(
+      datatemp.add(LGU(
           id: item["id"],
           name: item["name"],
           updatedAt: item["updated_at"],
           regionShortName: item["region_short_name"],
           slug: item["slug"],
+          logoUrl: item["logo_url"],
+          color: item["color"],
           createdAt: item["create_at"]));
-      // print(datatemp);
     });
     return datatemp;
   }

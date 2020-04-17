@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:metro_info/networking/api_provider.dart';
+import 'package:metro_info/provider/app_state.dart';
 import 'package:metro_info/views/profile.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,7 +15,7 @@ class SendMessage extends StatefulWidget {
 
 class _SendMessageState extends State<SendMessage> {
   String _message;
-
+  
   Message msg = Message();
 
   @override
@@ -25,13 +27,15 @@ class _SendMessageState extends State<SendMessage> {
 
   _checkAppUserRegistration() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-
+    
+    
     if (null == pref.getString("device_id")) {
       Alert(
           title: "Update your profile to send messages to LGU",
           context: context,
           buttons: [
             DialogButton(
+              color: Provider.of<AppState>(context, listen: false).themeColor,
               child: Text("Okay"),
               onPressed: () {
                 Navigator.pop(context);
@@ -109,11 +113,13 @@ class _SendMessageState extends State<SendMessage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 40.0),
                     child: DialogButton(
+                      color: Provider.of<AppState>(context, listen: false).themeColor,
                       onPressed: () {
                         Alert(
                                 style: AlertStyle(isCloseButton: false),
                                 buttons: [
                                   DialogButton(
+                                    color: Colors.red,
                                     child: Text(
                                       "No",
                                       style: TextStyle(
@@ -124,6 +130,7 @@ class _SendMessageState extends State<SendMessage> {
                                     },
                                   ),
                                   DialogButton(
+                                    color: Colors.green,
                                     child: Text(
                                       "Yes",
                                       style: TextStyle(
@@ -194,7 +201,8 @@ class _SendMessageState extends State<SendMessage> {
           type: AlertType.success,
           buttons: [
             DialogButton(
-              child: Text("Okay"),
+              color: Provider.of<AppState>(context, listen: false).themeColor,
+              child: Text("Okay", style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -209,6 +217,7 @@ class _SendMessageState extends State<SendMessage> {
           type: AlertType.error,
           buttons: [
             DialogButton(
+              color: Provider.of<AppState>(context, listen: false).themeColor,
               child: Text(
                 "Okay",
                 style: TextStyle(color: Colors.white),

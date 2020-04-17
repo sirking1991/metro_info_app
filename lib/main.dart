@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:metro_info/provider/app_state.dart';
 import 'package:metro_info/views/main.dart';
 import 'package:metro_info/views/region_lgu_selector.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  AppState appState = AppState();
+  appState.init();
+  runApp(ChangeNotifierProvider(
+    child: MyApp(),
+    create: (context) => appState,
+  ));
+}
 
 class MyApp extends StatelessWidget {
   Future lguChecker() async {
@@ -20,8 +31,7 @@ class MyApp extends StatelessWidget {
     return FutureBuilder(
       future: lguChecker(),
       builder: (context, AsyncSnapshot snapshot) {
-       
-        if(snapshot.connectionState== ConnectionState.done){
+        if (snapshot.connectionState == ConnectionState.done) {
           print(snapshot.data);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -29,25 +39,23 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.orange,
             ),
-            home: snapshot.hasData? MyHomePage():RegionLGUSelector(isIntial: true),
+            home: snapshot.hasData
+                ? MyHomePage()
+                : RegionLGUSelector(isIntial: true),
           );
-        }else{
+        } else {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'metro-info',
             theme: ThemeData(
               primarySwatch: Colors.orange,
             ),
-            home: Scaffold(              
-              body:Center(
-                child: CircularProgressIndicator(),
-              )
-
-            ),
-          ) ;
+            home: Scaffold(
+                body: Center(
+              child: CircularProgressIndicator(),
+            )),
+          );
         }
-      
-        
       },
     );
   }

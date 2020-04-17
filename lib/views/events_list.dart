@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:metro_info/models/events.dart';
 import 'package:metro_info/networking/api_provider.dart';
+import 'package:metro_info/provider/app_state.dart';
 import 'package:metro_info/views/events_detail.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EventsList extends StatefulWidget {
@@ -13,7 +15,6 @@ class EventsList extends StatefulWidget {
 }
 
 class _EventsListState extends State<EventsList> {
-
   int _lgu = 0;
 
   SharedPreferences _prefs;
@@ -22,7 +23,7 @@ class _EventsListState extends State<EventsList> {
 
   @override
   void initState() {
-    _getPrefs();    
+    _getPrefs();
     super.initState();
   }
 
@@ -31,7 +32,7 @@ class _EventsListState extends State<EventsList> {
     _lgu = _prefs.getInt("lgu_id");
 
     var tmp = _prefs.getString("Events");
-    if(null != tmp) {      
+    if (null != tmp) {
       List tmpEventsList = Events.getMapEvents(json.decode(tmp));
       print("displaying Events from cache");
       setState(() => _events = tmpEventsList);
@@ -40,20 +41,18 @@ class _EventsListState extends State<EventsList> {
     _getEventsFromAPI();
   }
 
-  _getEventsFromAPI(){
-    ApiProvider().get("events/$_lgu")
-      .then((response){
-        print("displaying Events from API");
+  _getEventsFromAPI() {
+    ApiProvider().get("events/$_lgu").then((response) {
+      print("displaying Events from API");
 
-        // save the Events to pref so we can load his later
-        _prefs.setString("Events", json.encode(response));
+      // save the Events to pref so we can load his later
+      _prefs.setString("Events", json.encode(response));
 
-        // rebuild
-        setState(() =>_events = Events.getMapEvents(response));
-      })
-      .catchError((onError){
-        print(onError);
-      });
+      // rebuild
+      setState(() => _events = Events.getMapEvents(response));
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 
   @override
@@ -86,11 +85,11 @@ class _EventsListState extends State<EventsList> {
                 ),
               ),
             ),
-            Column(              
+            Column(
               children: <Widget>[
-                ..._events.map((n){
+                ..._events.map((n) {
                   return ListItem(n, _prefs);
-                }),                
+                }),
               ],
             ),
           ],
@@ -113,23 +112,35 @@ class ListItem extends StatefulWidget {
 class _ListItemState extends State<ListItem> {
   @override
   Widget build(BuildContext context) {
-    bool read = null != widget._prefs.getBool("events_read_" + widget._events.id.toString());
+    bool read = null !=
+        widget._prefs.getBool("events_read_" + widget._events.id.toString());
 
-    var jiffyEventFrom = Jiffy(DateTime.parse( widget._events.eventFrom));
-    var jiffyEventTo = Jiffy(DateTime.parse( widget._events.eventTo));
+    var jiffyEventFrom = Jiffy(DateTime.parse(widget._events.eventFrom));
+    var jiffyEventTo = Jiffy(DateTime.parse(widget._events.eventTo));
 
-    return ListTile(
-      leading: Icon(read ? Icons.mail_outline: Icons.mail, size: 30.0, color: read ? Colors.grey : Colors.orange,),
-      title: Text(
-        widget._events.name,
-        style: TextStyle(fontSize: 20.0),
-      ),
-      subtitle: Text( jiffyEventFrom.format('MMMM do yyyy, h:mm a') + ' to ' + jiffyEventTo.format('MMMM do yyyy, h:mm a') ),
-      enabled: true,
-      contentPadding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
-      onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (BuildContext context) => EventsDetail(widget._events)));
+    return Consumer<AppState>(
+      builder: (BuildContext context, AppState appState, Widget child) {
+        return ListTile(
+          leading: Icon(
+            read ? Icons.mail_outline : Icons.mail,
+            size: 30.0,
+            color: read ? Colors.grey : appState.themeColor,
+          ),
+          title: Text(
+            widget._events.name,
+            style: TextStyle(fontSize: 20.0),
+          ),
+          subtitle: Text(jiffyEventFrom.format('MMMM do yyyy, h:mm a') +
+              ' to ' +
+              jiffyEventTo.format('MMMM do yyyy, h:mm a')),
+          enabled: true,
+          contentPadding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    EventsDetail(widget._events)));
+          },
+        );
       },
     );
   }

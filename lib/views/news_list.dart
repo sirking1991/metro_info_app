@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:metro_info/models/news.dart';
 import 'package:metro_info/networking/api_provider.dart';
+import 'package:metro_info/provider/app_state.dart';
 import 'package:metro_info/views/news_detail.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NewsList extends StatefulWidget {
@@ -13,7 +15,6 @@ class NewsList extends StatefulWidget {
 }
 
 class _NewsListState extends State<NewsList> {
-
   int _lgu = 0;
 
   SharedPreferences _prefs;
@@ -22,7 +23,7 @@ class _NewsListState extends State<NewsList> {
 
   @override
   void initState() {
-    _getPrefs();    
+    _getPrefs();
     super.initState();
   }
 
@@ -31,7 +32,7 @@ class _NewsListState extends State<NewsList> {
     _lgu = _prefs.getInt("lgu_id");
 
     var tmp = _prefs.getString("news");
-    if(null != tmp) {      
+    if (null != tmp) {
       List tmpNewsList = News.getMapNews(json.decode(tmp));
       print("displaying news from cache");
       setState(() => _news = tmpNewsList);
@@ -40,24 +41,22 @@ class _NewsListState extends State<NewsList> {
     _getNewsFromAPI();
   }
 
-  _getNewsFromAPI(){
-    ApiProvider().get("news/$_lgu")
-      .then((response){
-        print("displaying news from API");
+  _getNewsFromAPI() {
+    ApiProvider().get("news/$_lgu").then((response) {
+      print("displaying news from API");
 
-        // save the news to pref so we can load his later
-        _prefs.setString("news", json.encode(response));
+      // save the news to pref so we can load his later
+      _prefs.setString("news", json.encode(response));
 
-        // rebuild
-        setState(() =>_news = News.getMapNews(response));
-      })
-      .catchError((onError){
-        print(onError);
-      });
+      // rebuild
+      setState(() => _news = News.getMapNews(response));
+    }).catchError((onError) {
+      print(onError);
+    });
   }
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 10.0, right: 25.0, left: 25.0),
       child: Container(
@@ -86,11 +85,11 @@ class _NewsListState extends State<NewsList> {
                 ),
               ),
             ),
-            Column(              
+            Column(
               children: <Widget>[
-                ..._news.map((n){
+                ..._news.map((n) {
                   return ListItem(n, _prefs);
-                }),                
+                }),
               ],
             ),
           ],
@@ -113,23 +112,32 @@ class ListItem extends StatefulWidget {
 class _ListItemState extends State<ListItem> {
   @override
   Widget build(BuildContext context) {
-    bool read = null != widget._prefs.getBool("news_read_" + widget._news.id.toString());
+    bool read = null !=
+        widget._prefs.getBool("news_read_" + widget._news.id.toString());
 
-    var jiffy = Jiffy(DateTime.parse( widget._news.postingDate))
+    var jiffy = Jiffy(DateTime.parse(widget._news.postingDate))
       ..startOf(Units.HOUR);
 
-    return ListTile(
-      leading: Icon(read ? Icons.mail_outline: Icons.mail, size: 30.0, color: read ? Colors.grey : Colors.orange,),
-      title: Text(
-        widget._news.subject,
-        style: TextStyle(fontSize: 20.0),
-      ),
-      subtitle: Text(jiffy.fromNow() ),
-      enabled: true,
-      contentPadding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
-      onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (BuildContext context) => NewsDetail(widget._news)));
+    return Consumer<AppState>(
+      builder: (BuildContext context, AppState appState, Widget child) {
+        return ListTile(
+          leading: Icon(
+            read ? Icons.mail_outline : Icons.mail,
+            size: 30.0,
+            color: read ? Colors.grey : appState.themeColor,
+          ),
+          title: Text(
+            widget._news.subject,
+            style: TextStyle(fontSize: 20.0),
+          ),
+          subtitle: Text(jiffy.fromNow()),
+          enabled: true,
+          contentPadding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => NewsDetail(widget._news)));
+          },
+        );
       },
     );
   }

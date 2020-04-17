@@ -2,6 +2,9 @@ import 'package:device_id/device_id.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_info/networking/api_provider.dart';
 import 'package:flutter/services.dart';
+import 'package:metro_info/provider/app_state.dart';
+import 'package:metro_info/views/region_lgu_selector.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -112,12 +115,39 @@ class _ProfileState extends State<Profile> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 40.0),
+                    child: Consumer<AppState>(
+                      builder: (BuildContext context, AppState appState,
+                          Widget child) {
+                        return DialogButton(
+                          color: appState.themeColor,
+                          child: Text(
+                            'Update',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () => _save(),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.0),
                     child: DialogButton(
+                      color: Provider.of<AppState>(context, listen: false)
+                          .themeColor,
                       child: Text(
-                        'Update',
+                        'Change Region/LGU',
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () => _save(),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegionLGUSelector()),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -144,37 +174,47 @@ class _ProfileState extends State<Profile> {
     _pref.setString("email", _appUser.email);
     _pref.setString("dob", _appUser.dob);
 
+    var _themeColor = Provider.of<AppState>(context, listen: false).themeColor;
+
     // register user to API
-    ApiProvider().post("register_app_user", _appUser.toJson())
-      .then((response){
-          Alert(context: context, title: "Profile updated", type: AlertType.success,
+    ApiProvider().post("register_app_user", _appUser.toJson()).then((response) {
+      Alert(
+          context: context,
+          title: "Profile updated",
+          type: AlertType.success,
           buttons: [
             DialogButton(
-              child: Text("Okay"),
+              color: _themeColor,
+              child: Text(
+                "Okay",
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
             )
           ]).show();
-      })
-      .catchError((error){
-        Alert(
+    }).catchError((error) {
+      Alert(
           context: context,
           title: "Error",
-          desc: "An error occured while registering your profile. Try again later.",
+          desc:
+              "An error occured while registering your profile. Try again later.",
           type: AlertType.error,
           buttons: [
             DialogButton(
-              child: Text("Okay", style: TextStyle(color: Colors.white),),
+              color: _themeColor,
+              child: Text(
+                "Okay",
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             )
-          ]
-        ).show();
-      });
-
+          ]).show();
+    });
   }
 }
 
