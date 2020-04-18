@@ -32,7 +32,6 @@ class AppState extends ChangeNotifier {
   }
 
   String _lguThemeColor = 'indigo';
-  Color _themeColor = Colors.green;
   Color get themeColor {
     switch (_lguThemeColor) {
       case 'amber':

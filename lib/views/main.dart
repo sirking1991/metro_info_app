@@ -42,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
               iconSize: 30.0,
               onPressed: () {
                 // TODO: Should display drawer with LGU pages
+                
               },
             ),
             title: Text(
@@ -122,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class TopHeader extends StatelessWidget {
-  AppState appState;
+  final AppState appState;
 
   TopHeader(this.appState);
 

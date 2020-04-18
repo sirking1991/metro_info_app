@@ -100,8 +100,8 @@ class _NewsListState extends State<NewsList> {
 }
 
 class ListItem extends StatefulWidget {
-  var _news;
-  var _prefs;
+  final _news;
+  final _prefs;
 
   ListItem(this._news, this._prefs);
 

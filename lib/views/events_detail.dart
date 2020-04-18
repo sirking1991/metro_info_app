@@ -4,7 +4,7 @@ import 'package:metro_info/models/events.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EventsDetail extends StatefulWidget {
-  Events _events;
+  final Events _events;
   
   EventsDetail(this._events){    
     _markAsRead();

@@ -100,8 +100,8 @@ class _EventsListState extends State<EventsList> {
 }
 
 class ListItem extends StatefulWidget {
-  var _events;
-  var _prefs;
+  final _events;
+  final _prefs;
 
   ListItem(this._events, this._prefs);
 

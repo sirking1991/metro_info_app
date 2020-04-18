@@ -4,7 +4,7 @@ import 'package:metro_info/models/news.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NewsDetail extends StatefulWidget {
-  News _news;
+  final News _news;
   
   NewsDetail(this._news){    
     _markAsRead();

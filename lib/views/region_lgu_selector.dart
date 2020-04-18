@@ -9,7 +9,7 @@ import "package:metro_info/models/lgus.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegionLGUSelector extends StatefulWidget {
-  bool isIntial;
+  final bool isIntial;
   RegionLGUSelector({Key key, this.isIntial = false}) : super(key: key);
   @override
   _RegionLGUSelector createState() {
