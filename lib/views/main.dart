@@ -7,6 +7,7 @@ import 'package:metro_info/views/profile.dart';
 import 'package:metro_info/views/send_message.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -14,37 +15,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   void initState() {
     super.initState();
   }
 
-  // _getLGUDetails() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //   setState(() {
-  //     _lguName = prefs.getString("lgu_name");
-  //     _regionName = prefs.getString("region_short_name");
-  //   });
-  // }
+_launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AppState>(
       builder: (BuildContext context, AppState appState, Widget child) {
         return Scaffold(
+          // backgroundColor: Color.fromRGBO(244, 244, 244, 1),
           appBar: AppBar(
             backgroundColor: appState.themeColor,
-            leading: IconButton(
-              icon: Icon(Icons.menu),
-              color: Colors.white,
-              iconSize: 30.0,
-              onPressed: () {
-                // TODO: Should display drawer with LGU pages
-                
-              },
-            ),
             title: Text(
               'metro-info',
               style: TextStyle(fontSize: 30.0, color: Colors.white),
@@ -55,8 +46,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.white,
                 iconSize: 30.0,
                 onPressed: () {
-                  Share.share(
-                      'Hey! check out this ' + appState.lguName + ' app. https://metro-info.herokuapp.com');
+                  Share.share('Hey! check out this ' +
+                      appState.lguName +
+                      ' app. https://metro-info.herokuapp.com');
                 },
               ),
               IconButton(
@@ -70,7 +62,38 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             ],
           ),
-          backgroundColor: Color.fromRGBO(244, 244, 244, 1),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: appState.themeColor,
+                  ),
+                  child: Text(
+                    "Hi " + appState.pref.getString('first_name') + "!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text('About ' + appState.lguName),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _launchURL('https://www.websitepolicies.com/policies/view/IJZauoEt');
+                  },
+                  child: ListTile(
+                    leading: Icon(Icons.insert_drive_file),
+                    title: Text('Terms of use'),
+                  ),
+                ),
+              ],
+            ),
+          ),
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
