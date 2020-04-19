@@ -21,13 +21,13 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-_launchURL(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -75,26 +75,28 @@ _launchURL(String url) async {
                     "Hi " + appState.pref.getString('first_name') + "!",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 24,
+                      fontSize: 30.0,
                     ),
                   ),
                 ),
                 GestureDetector(
-                  onTap: (){
-                    _launchURL('https://metro-info.herokuapp.com/about-lgu/' + Slugify(appState.lguName) );
+                  onTap: () {
+                    _launchURL('https://metro-info.herokuapp.com/about-lgu/' +
+                        Slugify(appState.lguName));
                   },
-                                  child: ListTile(
-                    leading: Icon(Icons.info),
-                    title: Text('About ' + appState.lguName),
+                  child: ListTile(
+                    // leading: Icon(Icons.info),
+                    title: Text('About ' + appState.lguName, style: TextStyle(fontSize: 20.0),),
                   ),
                 ),
                 GestureDetector(
                   onTap: () {
-                    _launchURL('https://www.websitepolicies.com/policies/view/IJZauoEt');
+                    _launchURL(
+                        'https://www.websitepolicies.com/policies/view/IJZauoEt');
                   },
                   child: ListTile(
-                    leading: Icon(Icons.insert_drive_file),
-                    title: Text('Terms of use'),
+                    // leading: Icon(Icons.insert_drive_file),
+                    title: Text('Terms of use', style: TextStyle(fontSize: 20.0),),
                   ),
                 ),
               ],
