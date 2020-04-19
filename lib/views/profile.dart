@@ -40,7 +40,7 @@ class _ProfileState extends State<Profile> {
     _appUser.mobile = _pref.getString("mobile") ?? "";
     _appUser.email = _pref.getString("email") ?? "";
     _appUser.dob = _pref.getString("dob") ?? "";
-    _appUser.lguId = _pref.getInt("lgu_id") ?? "";    
+    _appUser.lguId = _pref.getInt("lgu_id") ?? "";
 
     setState(() {
       _firstName.text = _appUser.firstName;
@@ -110,10 +110,44 @@ class _ProfileState extends State<Profile> {
                     controller: _email,
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  TextField(
-                    controller: _dob,
-                    keyboardType: TextInputType.datetime,
-                    decoration: InputDecoration(labelText: 'Birth date'),
+                  GestureDetector(
+                    onTapDown: (e) async {
+                      var _dt;
+                      try {
+                        _dt = null == _dob.text.toString() ||
+                                '' == _dob.text.toString()
+                            ? DateTime.now()
+                            : DateTime.parse(
+                                _dob.text.toString() + ' 00:00:00');
+                      } catch (e) {
+                        _dt = DateTime.now();
+                      }
+
+                      showDatePicker(
+                        context: context,
+                        initialDate: _dt,
+                        firstDate: DateTime(1950),
+                        lastDate: _dt,
+                        builder: (BuildContext context, Widget child) {
+                          return Theme(
+                            data: ThemeData.dark(),
+                            child: child,
+                          );
+                        },
+                      ).then((dt) {
+                        if (null==dt) return;
+                        _dt = dt.toString().split(' ');
+                        setState(() {
+                          _dob.text = _dt[0];
+                        });
+                      });
+                    },
+                    child: TextField(
+                      controller: _dob,
+                      readOnly: true,
+                      keyboardType: TextInputType.datetime,
+                      decoration: InputDecoration(labelText: 'Birth date'),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 40.0),
@@ -121,16 +155,18 @@ class _ProfileState extends State<Profile> {
                       builder: (BuildContext context, AppState appState,
                           Widget child) {
                         if (_processing) {
-                          return Center(child: CircularProgressIndicator(),);
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
                         } else {
                           return DialogButton(
-                          color: appState.themeColor,
-                          child: Text(
-                            'Update',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () => _save(),
-                        );
+                            color: appState.themeColor,
+                            child: Text(
+                              'Update',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () => _save(),
+                          );
                         }
                       },
                     ),
@@ -199,7 +235,6 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
-                
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
