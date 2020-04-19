@@ -8,6 +8,7 @@ import 'package:metro_info/views/send_message.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:slugify/slugify.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -48,7 +49,7 @@ _launchURL(String url) async {
                 onPressed: () {
                   Share.share('Hey! check out this ' +
                       appState.lguName +
-                      ' app. https://metro-info.herokuapp.com');
+                      ' app. https://metro-info.herokuapp.com/download-app');
                 },
               ),
               IconButton(
@@ -78,9 +79,14 @@ _launchURL(String url) async {
                     ),
                   ),
                 ),
-                ListTile(
-                  leading: Icon(Icons.info),
-                  title: Text('About ' + appState.lguName),
+                GestureDetector(
+                  onTap: (){
+                    _launchURL('https://metro-info.herokuapp.com/about-lgu/' + Slugify(appState.lguName) );
+                  },
+                                  child: ListTile(
+                    leading: Icon(Icons.info),
+                    title: Text('About ' + appState.lguName),
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
