@@ -15,8 +15,10 @@ class SendMessage extends StatefulWidget {
 
 class _SendMessageState extends State<SendMessage> {
   String _message;
-  
+
   Message msg = Message();
+
+  bool _processing = false;
 
   @override
   void initState() {
@@ -27,8 +29,7 @@ class _SendMessageState extends State<SendMessage> {
 
   _checkAppUserRegistration() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    
-    
+
     if (null == pref.getString("device_id")) {
       Alert(
           title: "Update your profile to send messages to LGU",
@@ -112,57 +113,62 @@ class _SendMessageState extends State<SendMessage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 40.0),
-                    child: DialogButton(
-                      color: Provider.of<AppState>(context, listen: false).themeColor,
-                      onPressed: () {
-                        Alert(
-                                style: AlertStyle(isCloseButton: false),
-                                buttons: [
-                                  DialogButton(
-                                    color: Colors.red,
-                                    child: Text(
-                                      "No",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  DialogButton(
-                                    color: Colors.green,
-                                    child: Text(
-                                      "Yes",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      sendMessage();
-                                    },
-                                  ),
-                                ],
-                                context: context,
-                                title: "Send message?")
-                            .show();
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Icon(
-                            Icons.send,
-                            color: Colors.white,
+                    child: _processing
+                        ? Center(child: CircularProgressIndicator())
+                        : DialogButton(
+                            color: Provider.of<AppState>(context, listen: false)
+                                .themeColor,
+                            onPressed: () {
+                              Alert(
+                                      style: AlertStyle(isCloseButton: false),
+                                      buttons: [
+                                        DialogButton(
+                                          color: Colors.red,
+                                          child: Text(
+                                            "No",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                        DialogButton(
+                                          color: Colors.green,
+                                          child: Text(
+                                            "Yes",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            sendMessage();
+                                          },
+                                        ),
+                                      ],
+                                      context: context,
+                                      title: "Send message?")
+                                  .show();
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 10.0,
+                                ),
+                                Text(
+                                  'Send',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            'Send',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -174,6 +180,8 @@ class _SendMessageState extends State<SendMessage> {
   }
 
   sendMessage() async {
+    setState(() => _processing = true);
+
     SharedPreferences pref = await SharedPreferences.getInstance();
 
     msg.deviceId = pref.getString("device_id");
@@ -195,6 +203,7 @@ class _SendMessageState extends State<SendMessage> {
     FocusScope.of(context).requestFocus(FocusNode()); // hides keyboard
 
     ApiProvider().post("send_message", msg.toJson()).then((response) {
+      setState(() => _processing = false);
       Alert(
           context: context,
           title: "Message sent",
@@ -202,7 +211,10 @@ class _SendMessageState extends State<SendMessage> {
           buttons: [
             DialogButton(
               color: Provider.of<AppState>(context, listen: false).themeColor,
-              child: Text("Okay", style: TextStyle(color: Colors.white),),
+              child: Text(
+                "Okay",
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
@@ -210,6 +222,7 @@ class _SendMessageState extends State<SendMessage> {
             )
           ]).show();
     }).catchError((error) {
+      setState(() => _processing = false);
       Alert(
           context: context,
           title: "Error",
