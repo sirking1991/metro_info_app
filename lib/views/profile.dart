@@ -24,6 +24,8 @@ class _ProfileState extends State<Profile> {
 
   AppUser _appUser = AppUser();
 
+  bool _processing = false;
+
   @override
   void initState() {
     _getProfile();
@@ -38,7 +40,7 @@ class _ProfileState extends State<Profile> {
     _appUser.mobile = _pref.getString("mobile") ?? "";
     _appUser.email = _pref.getString("email") ?? "";
     _appUser.dob = _pref.getString("dob") ?? "";
-    _appUser.lguId = _pref.getInt("lgu_id") ?? "";
+    _appUser.lguId = _pref.getInt("lgu_id") ?? "";    
 
     setState(() {
       _firstName.text = _appUser.firstName;
@@ -118,7 +120,10 @@ class _ProfileState extends State<Profile> {
                     child: Consumer<AppState>(
                       builder: (BuildContext context, AppState appState,
                           Widget child) {
-                        return DialogButton(
+                        if (_processing) {
+                          return Center(child: CircularProgressIndicator(),);
+                        } else {
+                          return DialogButton(
                           color: appState.themeColor,
                           child: Text(
                             'Update',
@@ -126,6 +131,7 @@ class _ProfileState extends State<Profile> {
                           ),
                           onPressed: () => _save(),
                         );
+                        }
                       },
                     ),
                   ),
@@ -160,6 +166,8 @@ class _ProfileState extends State<Profile> {
   }
 
   _save() {
+    setState(() => _processing = true);
+
     _appUser.firstName = _firstName.text.trim();
     _appUser.lastName = _lastName.text.trim();
     _appUser.mobile = _mobile.text.trim();
@@ -178,6 +186,7 @@ class _ProfileState extends State<Profile> {
 
     // register user to API
     ApiProvider().post("register_app_user", _appUser.toJson()).then((response) {
+      setState(() => _processing = false);
       Alert(
           context: context,
           title: "Profile updated",
@@ -190,12 +199,14 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () {
+                
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
             )
           ]).show();
     }).catchError((error) {
+      setState(() => _processing = false);
       Alert(
           context: context,
           title: "Error",

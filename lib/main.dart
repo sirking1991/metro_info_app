@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'metro-info',
             theme: ThemeData(
-              primarySwatch: Colors.orange,
+              primarySwatch: Provider.of<AppState>(context, listen: false).themeColor,
             ),
             home: snapshot.hasData
                 ? MyHomePage()
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'metro-info',
             theme: ThemeData(
-              primarySwatch: Colors.orange,
+              primarySwatch: Provider.of<AppState>(context, listen: false).themeColor,
             ),
             home: Scaffold(
                 body: Center(
