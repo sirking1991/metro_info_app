@@ -39,7 +39,7 @@ class BgProcess extends ChangeNotifier {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: selectNotification);
 
-    var result = await flutterLocalNotificationsPlugin
+    await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
@@ -119,7 +119,7 @@ class BgProcess extends ChangeNotifier {
     });
 
     // Optionally query the current BackgroundFetch status.
-    int status = await BackgroundFetch.status;
+    await BackgroundFetch.status;
   }
 }
 

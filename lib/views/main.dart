@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_info/provider/app_state.dart';
-import 'package:metro_info/provider/bg_process.dart';
 import 'package:metro_info/views/events_list.dart';
 import 'package:metro_info/views/news_list.dart';
 import 'package:metro_info/views/profile.dart';
