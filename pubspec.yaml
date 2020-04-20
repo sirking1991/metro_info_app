@@ -21,28 +21,18 @@ dependencies:
     sdk: flutter
 
   http:
-
   device_id:
-
   provider:
-
   cached_network_image:
-
   rflutter_alert:
-
   jiffy:
-
   share:
-
   shared_preferences:
-
   url_launcher: ^5.4.2
-
   slugify: ^1.0.0
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  background_fetch: ^0.5.1
+  flutter_local_notifications: ^1.4.1
 
 dev_dependencies:
   flutter_test:
