@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_info/provider/app_state.dart';
+import 'package:metro_info/provider/bg_process.dart';
 import 'package:metro_info/views/events_list.dart';
 import 'package:metro_info/views/news_list.dart';
 import 'package:metro_info/views/profile.dart';
@@ -86,7 +87,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: ListTile(
                     // leading: Icon(Icons.info),
-                    title: Text('About ' + appState.lguName, style: TextStyle(fontSize: 20.0),),
+                    title: Text(
+                      'About ' + appState.lguName,
+                      style: TextStyle(fontSize: 20.0),
+                    ),
                   ),
                 ),
                 GestureDetector(
@@ -96,7 +100,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: ListTile(
                     // leading: Icon(Icons.insert_drive_file),
-                    title: Text('Terms of use', style: TextStyle(fontSize: 20.0),),
+                    title: Text(
+                      'Terms of use',
+                      style: TextStyle(fontSize: 20.0),
+                    ),
                   ),
                 ),
               ],
@@ -137,15 +144,37 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: appState.themeColor,
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => SendMessage()));
-            },
-            tooltip: 'Send',
-            child: Icon(Icons.message),
-            foregroundColor: Colors.white,
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              // Consumer<BgProcess>(
+              //   builder:
+              //       (BuildContext context, BgProcess bgProcess, Widget child) {
+              //     return FloatingActionButton(
+              //       backgroundColor: appState.themeColor,
+              //       onPressed: () {
+              //         bgProcess.getBcastMsg();
+              //       },
+              //       tooltip: 'Test',
+              //       child: Icon(Icons.flash_on),
+              //       foregroundColor: Colors.white,
+              //     );
+              //   },
+              // ),
+              // SizedBox(
+              //   width: 10.0,
+              // ),
+              FloatingActionButton(
+                backgroundColor: appState.themeColor,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => SendMessage()));
+                },
+                tooltip: 'Send',
+                child: Icon(Icons.message),
+                foregroundColor: Colors.white,
+              ),
+            ],
           ),
         );
       },
