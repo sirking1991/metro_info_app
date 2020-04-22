@@ -19,9 +19,29 @@ class RegionLGUSelector extends StatefulWidget {
 
 class _RegionLGUSelector extends State<RegionLGUSelector> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<Region> _religonData = [];
+
+  static List<Region> _regionList =
+  [
+    Region(id: 1, name: 'National Capital Region', shortName: 'NCR'),
+    Region(id: 2, name: 'Ilocos Region', shortName: 'Region I'),
+    Region(id: 3, name: 'Cordillera Administrative Region', shortName: 'CAR'),
+    Region(id: 4, name: 'Cagayan Valley', shortName: 'Region II'),
+    Region(id: 5, name: 'Central Luzon', shortName: 'Region III'),
+    Region(id: 6, name: 'Calabarzon', shortName: 'Region IV-A'),
+    Region(id: 7, name: 'Southwestern Tagalog Region', shortName: 'Mimaropa'),
+    Region(id: 8, name: 'Bicol Region', shortName: 'Region V'),
+    Region(id: 9, name: 'Western Visayas', shortName: 'Region VI'),
+    Region(id: 10, name: 'Central Visayas', shortName: 'Region VII'),
+    Region(id: 11, name: 'Eastern Visayas', shortName: 'Region VIII'),
+    Region(id: 12, name: 'Zamboanga Peninsula', shortName: 'Region IX'),
+    Region(id: 13, name: 'Northern Mindanao', shortName: 'Region X'),
+    Region(id: 14, name: 'Davao Region', shortName: 'Region XI'),
+    Region(id: 15, name: 'Soccsksargen', shortName: 'Soccsksargen'),
+    Region(id: 16, name: 'Caraga Region', shortName: 'Region XIII'),
+    Region(id: 17, name: 'Bangsamoro Autonomous Region in Muslim Mindanao', shortName: 'BARMM'),
+  ];
   List<LGU> _lgusData = [];
-  Region _regionValue; //Initial value
+  Region _selectedRegion = _regionList[0]; // Initially selected region is NCR
   LGU _lguValue; //initial value of LGUS
   LGU _initialValue = LGU(
       id: null,
@@ -31,7 +51,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
       slug: " ",
       updatedAt: " ");
   //this will be used to keep the initial value of the application
-  bool done = false; 
+  bool done = false;
 
   //this function is for storing the data in the sharedPrefreces and to show snackbar and navigate .
   void saveData() async {
@@ -58,18 +78,14 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
 
       return;
     }
-    try {
-      prefs.setInt('lgu_id', _lguValue.id);
-      prefs.setString("lgu_name", _lguValue.name);
-      prefs.setString("lgu_slug", _lguValue.slug);
-      prefs.setString("region_short_name", _lguValue.regionShortName);
 
-      Provider.of<AppState>(context, listen: false).reset();
+    // save to prefs
+    prefs.setInt('lgu_id', _lguValue.id);
+    prefs.setString("lgu_name", _lguValue.name);
+    prefs.setString("lgu_slug", _lguValue.slug);
+    prefs.setString("region_short_name", _lguValue.regionShortName);
 
-    } catch (error) {
-      print(error);
-      //Later in code we can handle the error on faiure
-    }
+    Provider.of<AppState>(context, listen: false).reset();
 
     Alert(
         context: context,
@@ -87,7 +103,6 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                     builder: (BuildContext context) => MyHomePage()));
               })
         ]).show();
-
   }
 
   // this function is for making the list of map into list of region instance and setting the downdown items value
@@ -112,25 +127,17 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
     });
   }
 
-  prepareDropDownData() async {
-    List _regionDataone;
-    List _tempRegionList;
+  _getLGUList() async {
     List _lGUsDataone;
     try {
       if (!done) {
-        _regionDataone = await ApiProvider().get("regions");
-        _tempRegionList = makeRegionList(_regionDataone);
-        _regionValue = _tempRegionList[0];
         _lGUsDataone =
-            await ApiProvider().get("lgus/" + _regionValue.shortName);
+            await ApiProvider().get("lgus/" + _selectedRegion.shortName);
         List _lGUsDataList = LGU.getMapLGUs(_lGUsDataone);
 
         _lgusData = _lGUsDataList;
         _lgusData.add(_initialValue);
         _lguValue = _initialValue;
-        //  _initialValue=_lguValue;
-        _religonData = _tempRegionList;
-        _regionValue = _tempRegionList[0];
       }
 
       done = true;
@@ -140,7 +147,6 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
       print(error);
       return false;
     }
-    
   }
 
   @override
@@ -149,7 +155,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
       key: _scaffoldKey,
       body: SingleChildScrollView(
           child: FutureBuilder(
-              future: prepareDropDownData(),
+              future: _getLGUList(),
               builder: (context, AsyncSnapshot snapshot) {
                 print(snapshot);
                 if (snapshot.hasData) {
@@ -209,17 +215,15 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                       Padding(
                         padding: EdgeInsets.all(25.0),
                         child: DropdownButton(
-                          value: _regionValue,
-                          onChanged: (Region newValue) {
-                            print(newValue);
-                            setState(() {
-                              _regionValue = newValue;
-                            });
-                            getLGUs(newValue);
+                          value: _selectedRegion,
+                          onChanged: (Region r) {
+//                            setState(() {
+//                              _selectedRegion = r;
+//                            });
+                            getLGUs(_selectedRegion);
                           },
-                          items: _religonData
+                          items: _regionList
                               .map<DropdownMenuItem<Region>>((value) {
-                            print(value);
                             return DropdownMenuItem<Region>(
                               value: value,
                               child: Text(value.shortName),
@@ -256,21 +260,22 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                   );
                 } else {
                   return Container(
+                    color: Colors.white,
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: Center(
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
+                        Image.asset('images/mi-logo.png', width: 200.0),
+                        SizedBox(height: 20,),
                         CircularProgressIndicator(),
                         SizedBox(
                           height: 20,
                         ),
                         Text(
-                          'Loading...',
+                          'Loading list of LGU...',
                           textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontWeight: FontWeight.bold),
                         )
                       ],
                     )),

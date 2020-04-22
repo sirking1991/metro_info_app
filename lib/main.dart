@@ -12,26 +12,28 @@ import 'dart:async';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  AppState appState = AppState();
-  appState.init();
 
-  BgProcess bgProcess = BgProcess();
-  bgProcess.init();
+
+
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => appState),
-        ChangeNotifierProvider(create: (context) => bgProcess),
+        ChangeNotifierProvider(create: (context) {
+          BgProcess bgProcess = BgProcess();
+          bgProcess.init();
+          return bgProcess;
+        }),
+        ChangeNotifierProvider(create: (context) {
+              AppState appState = AppState();
+              appState.init();
+              return appState;
+            }),
       ],
       child: MyApp(),
     ),
   );
 
-  // runApp(ChangeNotifierProvider(
-  //   child: MyApp(),
-  //   create: (context) => appState,
-  // ));
 }
 
 class MyApp extends StatefulWidget {

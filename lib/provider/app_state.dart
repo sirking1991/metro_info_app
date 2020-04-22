@@ -31,6 +31,9 @@ class AppState extends ChangeNotifier {
             width: 120.0);
   }
 
+  String _firstName = '';
+  String get firstName => _firstName;
+
   String _lguThemeColor = 'indigo';
   Color get themeColor {
     switch (_lguThemeColor) {
@@ -74,6 +77,7 @@ class AppState extends ChangeNotifier {
   SharedPreferences get pref => _pref;
 
   init() {
+    print("AppState.init()");
     _setGlobalVars();
   }
 
@@ -89,6 +93,7 @@ class AppState extends ChangeNotifier {
     _lguThemeColor = _pref.getString('lgu_primary_color');
     _lguLogoUrl = _pref.getString('lgu_logo_url');
     _regionShortName = _pref.getString("region_short_name");
+    _firstName = _pref.getString("first_name");
     notifyListeners();
 
     // get LGU details from API

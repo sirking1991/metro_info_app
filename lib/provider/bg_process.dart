@@ -16,6 +16,7 @@ class BgProcess extends ChangeNotifier {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   init() async {
+    print("BgProcess.init()");
     initPlatformState();
     initLocalNotification();
 
@@ -27,7 +28,7 @@ class BgProcess extends ChangeNotifier {
   initLocalNotification() async {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-    var initializationSettingsAndroid = AndroidInitializationSettings(null);
+    var initializationSettingsAndroid = AndroidInitializationSettings('milogo_sml');
     var initializationSettingsIOS = IOSInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
@@ -36,6 +37,7 @@ class BgProcess extends ChangeNotifier {
     );
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
+
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: selectNotification);
 
