@@ -85,11 +85,9 @@ class _NewsListState extends State<NewsList> {
                 ),
               ),
             ),
-            Column(
+            _news.length == 0 ? Padding(padding:EdgeInsets.all(10.0) ,child:Text("No news posted at the moment", style: TextStyle(fontSize: 15.0),)) : Column(
               children: <Widget>[
-                ..._news.map((n) {
-                  return ListItem(n, _prefs);
-                }),
+                ..._news.map((n) { return ListItem(n, _prefs); }),
               ],
             ),
           ],
