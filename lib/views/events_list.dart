@@ -85,11 +85,9 @@ class _EventsListState extends State<EventsList> {
                 ),
               ),
             ),
-            Column(
+            _events.length == 0 ? Padding(padding:EdgeInsets.all(10.0) ,child:Text("No scheduled events at the moment", style: TextStyle(fontSize: 15.0),)) : Column(
               children: <Widget>[
-                ..._events.map((n) {
-                  return ListItem(n, _prefs);
-                }),
+                ..._events.map((n) { return ListItem(n, _prefs); }),
               ],
             ),
           ],
@@ -122,7 +120,7 @@ class _ListItemState extends State<ListItem> {
       builder: (BuildContext context, AppState appState, Widget child) {
         return ListTile(
           leading: Icon(
-            read ? Icons.mail_outline : Icons.mail,
+            read ? Icons.calendar_today : Icons.calendar_today,
             size: 30.0,
             color: read ? Colors.grey : appState.themeColor,
           ),
