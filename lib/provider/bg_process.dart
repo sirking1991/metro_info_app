@@ -62,7 +62,7 @@ class BgProcess extends ChangeNotifier {
     }
   }
 
-  sendNotification(String title, String body) async {
+  sendNotification(int id, String title, String body) async {
     print('sending notification: ' + body);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your-channel-id', 'your-channel-name', 'your-channel-description',
@@ -71,7 +71,7 @@ class BgProcess extends ChangeNotifier {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin
-        .show(0, title, body, platformChannelSpecifics, payload: 'item x');
+        .show(id, title, body, platformChannelSpecifics, payload: 'item x');
   }
 
   getBcastMsg() async {
@@ -83,7 +83,7 @@ class BgProcess extends ChangeNotifier {
       bcastMsg.forEach((msg) {
         if (null == _pref.getBool('bcastmsg_' + msg.id.toString())) {
           //var lguName = Provider.of<AppState>(context, listen: false).lguName;
-          sendNotification('METRO-INFO', msg.message);
+          sendNotification(msg.id, 'METRO-INFO', msg.message);
           // set so we dont notify for same message
           _pref.setBool('bcastmsg_' + msg.id.toString(), true);
         }
