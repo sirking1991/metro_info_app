@@ -37,7 +37,7 @@ class _SendMessageState extends State<SendMessage> {
           buttons: [
             DialogButton(
               color: Provider.of<AppState>(context, listen: false).themeColor,
-              child: Text("Okay"),
+              child: Text("Okay", style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.push(
