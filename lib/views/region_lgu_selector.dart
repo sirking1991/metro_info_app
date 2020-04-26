@@ -20,8 +20,7 @@ class RegionLGUSelector extends StatefulWidget {
 class _RegionLGUSelector extends State<RegionLGUSelector> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  static List<Region> _regionList =
-  [
+  static List<Region> _regionList = [
     Region(id: 1, name: 'National Capital Region', shortName: 'NCR'),
     Region(id: 2, name: 'Ilocos Region', shortName: 'Region I'),
     Region(id: 3, name: 'Cordillera Administrative Region', shortName: 'CAR'),
@@ -38,18 +37,14 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
     Region(id: 14, name: 'Davao Region', shortName: 'Region XI'),
     Region(id: 15, name: 'Soccsksargen', shortName: 'Soccsksargen'),
     Region(id: 16, name: 'Caraga Region', shortName: 'Region XIII'),
-    Region(id: 17, name: 'Bangsamoro Autonomous Region in Muslim Mindanao', shortName: 'BARMM'),
+    Region(
+        id: 17,
+        name: 'Bangsamoro Autonomous Region in Muslim Mindanao',
+        shortName: 'BARMM'),
   ];
   List<LGU> _lgusData = [];
   Region _selectedRegion = _regionList[0]; // Initially selected region is NCR
   LGU _lguValue; //initial value of LGUS
-  LGU _initialValue = LGU(
-      id: null,
-      name: "select LGUs",
-      createdAt: null,
-      regionShortName: " ",
-      slug: " ",
-      updatedAt: " ");
   //this will be used to keep the initial value of the application
   bool done = false;
 
@@ -112,41 +107,19 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
   }
 
   // this function is for making the list of map into list of LGUs instance and setting the downdown items value
-  void getLGUs(lguValue) {
-    ApiProvider().get("lgus/" + lguValue.shortName).then((response) {
-      print(response);
+  getLGUs(String regionShortName) async {
+    ApiProvider().get("lgus/" + regionShortName).then((response) {
       List _lGUsDataList = LGU.getMapLGUs(response);
-      _lGUsDataList.add(_initialValue);
+
       setState(() {
         _lgusData = _lGUsDataList;
         _lguValue = _lGUsDataList[0];
       });
     }).catchError((error) {
-      print("this is error");
       print(error);
     });
-  }
 
-  _getLGUList() async {
-    List _lGUsDataone;
-    try {
-      if (!done) {
-        _lGUsDataone =
-            await ApiProvider().get("lgus/" + _selectedRegion.shortName);
-        List _lGUsDataList = LGU.getMapLGUs(_lGUsDataone);
-
-        _lgusData = _lGUsDataList;
-        _lgusData.add(_initialValue);
-        _lguValue = _initialValue;
-      }
-
-      done = true;
-
-      return true;
-    } catch (error) {
-      print(error);
-      return false;
-    }
+    return true;
   }
 
   @override
@@ -155,7 +128,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
       key: _scaffoldKey,
       body: SingleChildScrollView(
           child: FutureBuilder(
-              future: _getLGUList(),
+              future: getLGUs(_selectedRegion.shortName),
               builder: (context, AsyncSnapshot snapshot) {
                 print(snapshot);
                 if (snapshot.hasData) {
@@ -217,10 +190,9 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                         child: DropdownButton(
                           value: _selectedRegion,
                           onChanged: (Region r) {
-//                            setState(() {
-//                              _selectedRegion = r;
-//                            });
-                            getLGUs(_selectedRegion);
+                            _selectedRegion = r;
+                            print("selected region:" + r.shortName);
+                            getLGUs(r.shortName);
                           },
                           items: _regionList
                               .map<DropdownMenuItem<Region>>((value) {
@@ -236,7 +208,6 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                         child: DropdownButton(
                           value: _lguValue,
                           onChanged: (newValue) {
-                            print(newValue);
                             setState(() {
                               _lguValue = newValue;
                             });
@@ -252,7 +223,10 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                       Padding(
                         padding: const EdgeInsets.all(25.0),
                         child: DialogButton(
-                          child: Text('Save'),
+                          child: Text(
+                            'Save',
+                            style: TextStyle(color: Colors.white),
+                          ),
                           onPressed: () => saveData(),
                         ),
                       ),
@@ -268,7 +242,9 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Image.asset('images/mi-logo.png', width: 200.0),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         CircularProgressIndicator(),
                         SizedBox(
                           height: 20,
@@ -284,5 +260,4 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
               })),
     );
   }
-
 }
