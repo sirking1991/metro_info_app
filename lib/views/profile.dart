@@ -135,7 +135,7 @@ class _ProfileState extends State<Profile> {
                           );
                         },
                       ).then((dt) {
-                        if (null==dt) return;
+                        if (null == dt) return;
                         _dt = dt.toString().split(' ');
                         setState(() {
                           _dob.text = _dt[0];
@@ -202,13 +202,61 @@ class _ProfileState extends State<Profile> {
   }
 
   _save() {
-    setState(() => _processing = true);
+    var _themeColor = Provider.of<AppState>(context, listen: false).themeColor;
 
     _appUser.firstName = _firstName.text.trim();
     _appUser.lastName = _lastName.text.trim();
     _appUser.mobile = _mobile.text.trim();
     _appUser.email = _email.text.trim();
     _appUser.dob = _dob.text.trim();
+
+    List<String> errors = [];
+    // validate
+    if (2 > _appUser.firstName.length) errors.add("First name is invalid");
+    if (2 > _appUser.lastName.length) errors.add("Last name is invalid");
+
+    if(11 > _appUser.mobile.length) errors.add("Invalid modile (eg. 091812345678)");
+
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(_appUser.email);
+    if (!emailValid) errors.add("Email is invalid");
+
+    var dt;
+    try{
+      dt = DateTime.parse( _appUser.dob + ' 00:00:00');
+    } catch (e) {}
+    if(null==dt) errors.add("Birth date is invalid");
+
+    if (0 < errors.length) {
+      Alert(
+          context: context,
+          title: "Please fix the error(s) below",
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              ...errors.map((e) {
+                return Text("-" + e);
+              })
+            ],
+          ),
+          type: AlertType.error,
+          buttons: [
+            DialogButton(
+              color: _themeColor,
+              child: Text(
+                "Okay",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ]).show();
+      return;
+    }
+
+    setState(() => _processing = true);
 
     // save to pref
     _pref.setString("device_id", _appUser.deviceId);
@@ -217,8 +265,6 @@ class _ProfileState extends State<Profile> {
     _pref.setString("mobile", _appUser.mobile);
     _pref.setString("email", _appUser.email);
     _pref.setString("dob", _appUser.dob);
-
-    var _themeColor = Provider.of<AppState>(context, listen: false).themeColor;
 
     // register user to API
     ApiProvider().post("register_app_user", _appUser.toJson()).then((response) {
