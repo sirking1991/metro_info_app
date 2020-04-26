@@ -5,8 +5,7 @@ import 'dart:convert';
 import 'dart:async';
 
 class ApiProvider {
-  //final String _baseUrl = "https://e216af13.ap.ngrok.io/api/";
-  final String _baseUrl = "https://metro-info.herokuapp.com/api/";
+  final String _baseUrl = "https://metroinfo.center/api/";
   
 
   Future<dynamic> get(String url) async {
