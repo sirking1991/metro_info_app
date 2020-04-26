@@ -98,12 +98,25 @@ class _MyHomePageState extends State<MyHomePage> {
             GestureDetector(
               onTap: () {
                 _launchURL(
-                    'https://www.websitepolicies.com/policies/view/IJZauoEt');
+                    'https://metroinfo.center/terms-of-use');
               },
               child: ListTile(
                 // leading: Icon(Icons.insert_drive_file),
                 title: Text(
                   'Terms of use',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                _launchURL(
+                    'https://metroinfo.center/privacy-policy');
+              },
+              child: ListTile(
+                // leading: Icon(Icons.insert_drive_file),
+                title: Text(
+                  'Privacy policy',
                   style: TextStyle(fontSize: 20.0),
                 ),
               ),
