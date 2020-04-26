@@ -123,141 +123,110 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
   }
 
   @override
+  void initState() {
+    getLGUs(_selectedRegion.shortName);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       body: SingleChildScrollView(
-          child: FutureBuilder(
-              future: getLGUs(_selectedRegion.shortName),
-              builder: (context, AsyncSnapshot snapshot) {
-                print(snapshot);
-                if (snapshot.hasData) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        width: double.infinity,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              top: 30.0, right: 15.0, left: 15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.arrow_back),
-                                color: Colors.black45,
-                                iconSize: 30.0,
-                                onPressed: () {
-                                  widget.isIntial
-                                      ? Alert(
-                                              buttons: [
-                                              DialogButton(
-                                                child: Text(
-                                                  "OK",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20),
-                                                ),
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                width: 120,
-                                              )
-                                            ],
-                                              context: context,
-                                              title:
-                                                  "Please select Region to proceed")
-                                          .show()
-                                      : Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 25.0, vertical: 30.0),
-                        child: Text(
-                          'Select Region & LGU',
-                          style: TextStyle(
-                              color: Colors.black.withOpacity(0.7),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 32.0),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(25.0),
-                        child: DropdownButton(
-                          value: _selectedRegion,
-                          onChanged: (Region r) {
-                            _selectedRegion = r;
-                            print("selected region:" + r.shortName);
-                            getLGUs(r.shortName);
-                          },
-                          items: _regionList
-                              .map<DropdownMenuItem<Region>>((value) {
-                            return DropdownMenuItem<Region>(
-                              value: value,
-                              child: Text(value.shortName),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(25.0),
-                        child: DropdownButton(
-                          value: _lguValue,
-                          onChanged: (newValue) {
-                            setState(() {
-                              _lguValue = newValue;
-                            });
-                          },
-                          items: _lgusData.map<DropdownMenuItem<LGU>>((value) {
-                            return DropdownMenuItem<LGU>(
-                              value: value,
-                              child: Text(value.name),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: DialogButton(
-                          child: Text(
-                            'Save',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () => saveData(),
-                        ),
-                      ),
-                    ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.only(top: 30.0, right: 15.0, left: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      color: Colors.black45,
+                      iconSize: 30.0,
+                      onPressed: () {
+                        widget.isIntial
+                            ? Alert(
+                                    buttons: [
+                                    DialogButton(
+                                      child: Text(
+                                        "OK",
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                      onPressed: () => Navigator.pop(context),
+                                      width: 120,
+                                    )
+                                  ],
+                                    context: context,
+                                    title: "Please select Region to proceed")
+                                .show()
+                            : Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 30.0),
+              child: Text(
+                'Select Region & LGU',
+                style: TextStyle(
+                    color: Colors.black.withOpacity(0.7),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 32.0),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(25.0),
+              child: DropdownButton(
+                value: _selectedRegion,
+                onChanged: (Region r) {
+                  _selectedRegion = r;
+                  getLGUs(_selectedRegion.shortName);
+                },
+                items: _regionList.map<DropdownMenuItem<Region>>((value) {
+                  return DropdownMenuItem<Region>(
+                    value: value,
+                    child: Text(value.shortName),
                   );
-                } else {
-                  return Container(
-                    color: Colors.white,
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset('images/mi-logo.png', width: 200.0),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        CircularProgressIndicator(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          'Loading list of LGU...',
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    )),
+                }).toList(),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(25.0),
+              child: DropdownButton(
+                value: _lguValue,
+                onChanged: (newValue) {
+                  setState(() {
+                    _lguValue = newValue;
+                  });
+                },
+                items: _lgusData.map<DropdownMenuItem<LGU>>((value) {
+                  return DropdownMenuItem<LGU>(
+                    value: value,
+                    child: Text(value.name),
                   );
-                }
-              })),
+                }).toList(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: DialogButton(
+                child: Text(
+                  'Save',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () => saveData(),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
