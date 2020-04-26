@@ -110,15 +110,15 @@ class _ProfileState extends State<Profile> {
                     controller: _email,
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  GestureDetector(
-                    onTapDown: (e) async {
+                  TextField(
+                    onTap: (){
                       var _dt;
                       try {
                         _dt = null == _dob.text.toString() ||
-                                '' == _dob.text.toString()
+                            '' == _dob.text.toString()
                             ? DateTime.now()
                             : DateTime.parse(
-                                _dob.text.toString() + ' 00:00:00');
+                            _dob.text.toString() + ' 00:00:00');
                       } catch (e) {
                         _dt = DateTime.now();
                       }
@@ -142,12 +142,10 @@ class _ProfileState extends State<Profile> {
                         });
                       });
                     },
-                    child: TextField(
-                      controller: _dob,
-                      readOnly: true,
-                      keyboardType: TextInputType.datetime,
-                      decoration: InputDecoration(labelText: 'Birth date'),
-                    ),
+                    controller: _dob,
+                    readOnly: true,
+                    keyboardType: TextInputType.datetime,
+                    decoration: InputDecoration(labelText: 'Birth date'),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 40.0),
