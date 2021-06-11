@@ -5,8 +5,8 @@ import 'package:metro_info/models/lgus.dart';
 class LGUsRepository {
   ApiProvider _provider = ApiProvider();
 
-  Future<LGUs> fetchLGUs(String regionShortName) async {
+  Future<LGU> fetchLGUs(String regionShortName) async {
     final response = await _provider.get("/lgus/" + regionShortName);
-    return LGUs.fromJson(response);
+    return LGU.fromJson(response);
   }
 }

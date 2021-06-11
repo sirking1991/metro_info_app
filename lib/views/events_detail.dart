@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:metro_info/models/news.dart';
+import 'package:metro_info/models/events.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NewsDetail extends StatefulWidget {
-  final News _news;
+class EventsDetail extends StatefulWidget {
+  final Events _events;
   
-  NewsDetail(this._news){    
+  EventsDetail(this._events){    
     _markAsRead();
   }
 
   _markAsRead() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setBool("news_read_" + _news.id.toString(), true);
-  }
+    pref.setBool("events_read_" + _events.id.toString(), true);
+  }  
 
   @override
-  _NewsDetailState createState() => _NewsDetailState();
+  _EventsDetailState createState() => _EventsDetailState();
 }
 
-class _NewsDetailState extends State<NewsDetail> {
+class _EventsDetailState extends State<EventsDetail> {
   @override
   Widget build(BuildContext context) {
-    var jiffy = Jiffy(DateTime.parse( widget._news.postingDate))
-      ..startOf(Units.HOUR);
+    var jiffyEventFrom = Jiffy(DateTime.parse( widget._events.eventFrom));
+    var jiffyEventTo = Jiffy(DateTime.parse( widget._events.eventTo));
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -57,20 +57,20 @@ class _NewsDetailState extends State<NewsDetail> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(widget._news.subject,
+                  Text(widget._events.name,
                     style: TextStyle(
                         color: Colors.black.withOpacity(0.7),
                         fontWeight: FontWeight.bold,
                         fontSize: 32.0),
                   ),
                   Text(
-                    jiffy.fromNow() + ', ' + jiffy.format('MMM do yyyy'),
+                    jiffyEventFrom.format('MMMM do yyyy, h:mm a') + ' to ' + jiffyEventTo.format('MMMM do yyyy, h:mm a'),
                     style: TextStyle(
                         color: Colors.grey,
                         fontSize: 15.0),
                   ),
                   SizedBox(height: 20.0),
-                  Text(widget._news.content, style: TextStyle(
+                  Text(widget._events.content, style: TextStyle(
                         color: Colors.black.withOpacity(0.7),                        
                         fontSize: 20.0))
                 ],

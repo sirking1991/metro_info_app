@@ -1,12 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:metro_info/networking/api_provider.dart';
+import 'package:metro_info/provider/app_state.dart';
+import 'package:metro_info/provider/bg_process.dart';
+import 'package:metro_info/views/events_list.dart';
 import 'package:metro_info/views/news_list.dart';
 import 'package:metro_info/views/profile.dart';
-import 'package:metro_info/views/region_lgu_selector.dart';
 import 'package:metro_info/views/send_message.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:slugify/slugify.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -14,51 +17,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // TODO: These should be taken from SharedPreferences
-  Color _primaryColor = Color.fromRGBO(255, 82, 48, 1);
-  String _lguLogoPath =
-      'https://upload.wikimedia.org/wikipedia/en/4/48/Ph_seal_ncr_pasay.png';
-  String _regionName = '';
-  String _lguName = '';
-
   @override
   void initState() {
-    _getLGUDetails();
     super.initState();
+    Provider.of<BgProcess>(context, listen: false).init();
   }
 
-  _getLGUDetails() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      _lguName = prefs.getString("lgu_name");
-      _regionName = prefs.getString("region_short_name");
-    });
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Color.fromRGBO(244, 244, 244, 1),
       appBar: AppBar(
-        backgroundColor: _primaryColor,
-        // leading: IconButton(
-        //   icon: Icon(Icons.menu),
-        //   color: Colors.white,
-        //   iconSize: 30.0,
-        //   onPressed: () {
-
-        //       Navigator.of(context).push(MaterialPageRoute(
-        //           builder: (BuildContext context) => RegionLGUSelector(isIntial: false,)));
-
-        //     // TODO: Should display drawer with LGU pages
-
-        //   },
-        // ),
+        backgroundColor:
+            Provider.of<AppState>(context, listen: false).themeColor,
         title: Text(
           'metro-info',
           style: TextStyle(fontSize: 30.0, color: Colors.white),
         ),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.share),
+            color: Colors.white,
+            iconSize: 30.0,
+            onPressed: () {
+              Share.share('Hey! check out this ' +
+                  Provider.of<AppState>(context, listen: false).lguName +
+                  ' app. https://metro-info.herokuapp.com/download-app');
+            },
+          ),
           IconButton(
             icon: Icon(Icons.person_outline),
             color: Colors.white,
@@ -70,32 +64,93 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      backgroundColor: Color.fromRGBO(244, 244, 244, 1),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Provider.of<AppState>(context, listen: false).themeColor,
+              ),
+              child: Text(
+                "Hello! Welcome to metro-info",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30.0,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                _launchURL('https://metro-info.herokuapp.com/about-lgu/' +
+                    Slugify(
+                        Provider.of<AppState>(context, listen: false).lguName));
+              },
+              child: ListTile(
+                // leading: Icon(Icons.info),
+                title: Text(
+                  'About ' +
+                      Provider.of<AppState>(context, listen: false).lguName,
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                _launchURL(
+                    'https://metroinfo.center/terms-of-use');
+              },
+              child: ListTile(
+                // leading: Icon(Icons.insert_drive_file),
+                title: Text(
+                  'Terms of use',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                _launchURL(
+                    'https://metroinfo.center/privacy-policy');
+              },
+              child: ListTile(
+                // leading: Icon(Icons.insert_drive_file),
+                title: Text(
+                  'Privacy policy',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Stack(
               children: <Widget>[
-                TopHeader(_primaryColor),
+                TopHeader(),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      child: CachedNetworkImage(
-                        imageUrl: _lguLogoPath,
-                        width: 120.0,
-                      ),
+                      child:
+                          Provider.of<AppState>(context, listen: true).lguLogo,
                       padding:
                           EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(_lguName,
+                        Text(
+                            Provider.of<AppState>(context, listen: false)
+                                .lguName,
                             style:
                                 TextStyle(color: Colors.white, fontSize: 25.0)),
-                        Text(_regionName,
+                        Text(
+                            Provider.of<AppState>(context, listen: false)
+                                .regionShortName,
                             style:
                                 TextStyle(color: Colors.white, fontSize: 15.0)),
                       ],
@@ -105,113 +160,59 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             NewsList(),
-            EventsBox(),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: _primaryColor,
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) => SendMessage()));
-        },
-        tooltip: 'Send',
-        child: Icon(Icons.message),
-        foregroundColor: Colors.white,
-      ),
-    );
-  }
-}
-
-class EventsBox extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0, right: 25.0, left: 25.0),
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              offset: Offset(0.0, 3.0),
-              blurRadius: 15.0,
+            EventsList(),
+            SizedBox(
+              height: 20.0,
             ),
           ],
         ),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-              child: Text(
-                'Events',
-                style: TextStyle(
-                  color: Colors.black.withOpacity(0.7),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-            ListItem('Aenean aliquet, tellus et semper aliquet',
-                'Apr 3, 2020 2pm - 3pm', Icons.today),
-            ListItem('Nam porta consectetur arcu', 'Apr 9, 2020 8am - 12pm',
-                Icons.today),
-            ListItem('Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-                '3 hrs ago', Icons.today),
-            ListItem('Etiam ac lectus vel enim viverra venenatis.', '1 day ago',
-                Icons.today),
-            ListItem('Donec fermentum sit amet nibh et vehicula.', '2 days ago',
-                Icons.today),
-          ],
-        ),
       ),
-    );
-  }
-}
-
-class ListItem extends StatelessWidget {
-  final _title;
-  final _subTitle;
-  final _icon;
-
-  const ListItem(this._title, this._subTitle, this._icon);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        _icon,
-        size: 30.0,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          // Consumer<BgProcess>(
+          //   builder:
+          //       (BuildContext context, BgProcess bgProcess, Widget child) {
+          //     return FloatingActionButton(
+          //       backgroundColor: appState.themeColor,
+          //       onPressed: () {
+          //         bgProcess.getBcastMsg();
+          //       },
+          //       tooltip: 'Test',
+          //       child: Icon(Icons.flash_on),
+          //       foregroundColor: Colors.white,
+          //     );
+          //   },
+          // ),
+          // SizedBox(
+          //   width: 10.0,
+          // ),
+          FloatingActionButton(
+            backgroundColor:
+                Provider.of<AppState>(context, listen: false).themeColor,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => SendMessage()));
+            },
+            tooltip: 'Send',
+            child: Icon(Icons.message),
+            foregroundColor: Colors.white,
+          ),
+        ],
       ),
-      title: Text(
-        _title,
-        style: TextStyle(fontSize: 20.0),
-      ),
-      subtitle: Text(_subTitle),
-      enabled: true,
-      contentPadding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
-      onTap: () {
-        // Navigator.of(context).push(
-        //     MaterialPageRoute(builder: (BuildContext context) => NewsDetail()));
-      },
     );
   }
 }
 
 class TopHeader extends StatelessWidget {
-  final _primaryColor;
-
-  const TopHeader(this._primaryColor);
-
   @override
   Widget build(BuildContext context) {
     return ClipPath(
       clipper: CustomShapeClipper(),
       child: Container(
         height: 200.0,
-        decoration: BoxDecoration(color: _primaryColor),
+        decoration: BoxDecoration(
+            color: Provider.of<AppState>(context, listen: false).themeColor),
       ),
     );
   }

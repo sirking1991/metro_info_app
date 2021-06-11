@@ -1,4 +1,4 @@
-package com.example.metro_info
+package co.sirking.metro_info
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
