@@ -11,11 +11,6 @@ import 'dart:async';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-
-
-
-
   runApp(
     MultiProvider(
       providers: [

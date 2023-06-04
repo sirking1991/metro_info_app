@@ -14,7 +14,7 @@ description: Information dissemination platform for Local Government Units
 version: 1.0.2
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -28,11 +28,10 @@ dependencies:
   jiffy:
   share:
   shared_preferences:
-  url_launcher: ^5.4.2
-  slugify: ^1.0.0
-  cupertino_icons: ^0.1.2
-  background_fetch: ^0.5.1
-  flutter_local_notifications: ^1.4.1
+  url_launcher: ^6.1.11
+  slugify: ^2.0.0
+  cupertino_icons: ^1.0.5
+  background_fetch: ^1.1.6
 
 dev_dependencies:
   flutter_test:
