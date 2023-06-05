@@ -31,6 +31,7 @@ void main() {
 
 }
 
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -57,9 +58,10 @@ class _MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             title: 'metro-info',
             theme: ThemeData(
-              primarySwatch:
-                  Provider.of<AppState>(context, listen: false).themeColor,
-            ),
+              colorScheme: ColorScheme.fromSwatch().copyWith(
+
+            primary:Provider.of<AppState>(context, listen: false).themeColor,
+            )),
             home: snapshot.hasData
                 ? MyHomePage()
                 : RegionLGUSelector(isIntial: true),
@@ -69,9 +71,10 @@ class _MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             title: 'metro-info',
             theme: ThemeData(
-              primarySwatch:
-                  Provider.of<AppState>(context, listen: false).themeColor,
-            ),
+              colorScheme: ColorScheme.fromSwatch().copyWith(
+
+            primary:Provider.of<AppState>(context, listen: false).themeColor,
+            )),
             home: Scaffold(
                 body: Center(
               child: CircularProgressIndicator(),

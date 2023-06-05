@@ -137,27 +137,26 @@ class BroadcastMessage {
   String updatedAt;
 
   BroadcastMessage(
-      {this.id,
-      this.lguId,
-      this.postedBy,
-      this.broadcastOn,
-      this.broadcastVia,
-      this.message,
-      this.status,
-      this.createdAt,
-      this.updatedAt});
+      {this.id=0,
+      this.lguId=0,
+      this.postedBy=0,
+      this.broadcastOn="",
+      this.broadcastVia="",
+      this.message="",
+      this.status="",
+      this.createdAt="",
+      this.updatedAt=""});
 
-  BroadcastMessage.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    lguId = json['lgu_id'];
-    postedBy = json['posted_by'];
-    broadcastOn = json['broadcast_on'];
-    broadcastVia = json['broadcast_via'];
-    message = json['message'];
-    status = json['status'];
-    createdAt = json['created_at'];
+  BroadcastMessage.fromJson(Map<String, dynamic> json) :
+    id = json['id'],
+    lguId = json['lgu_id'],
+    postedBy = json['posted_by'],
+    broadcastOn = json['broadcast_on'],
+    broadcastVia = json['broadcast_via'],
+    message = json['message'],
+    status = json['status'],
+    createdAt = json['created_at'],
     updatedAt = json['updated_at'];
-  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

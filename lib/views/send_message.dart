@@ -14,7 +14,7 @@ class SendMessage extends StatefulWidget {
 }
 
 class _SendMessageState extends State<SendMessage> {
-  String _message;
+  String _message="";
 
   Message msg = Message();
 
@@ -184,8 +184,8 @@ class _SendMessageState extends State<SendMessage> {
 
     SharedPreferences pref = await SharedPreferences.getInstance();
 
-    msg.deviceId = pref.getString("device_id");
-    msg.lguId = pref.getInt("lgu_id");
+    msg.deviceId = pref.getString("device_id")!!;
+    msg.lguId = pref.getInt("lgu_id")!!;
     msg.message = _message;
 
     var now = new DateTime.now();
@@ -245,10 +245,10 @@ class _SendMessageState extends State<SendMessage> {
 }
 
 class Message {
-  String validationToken;
-  int lguId;
-  String deviceId;
-  String message;
+  String validationToken="";
+  int lguId=0;
+  String deviceId="";
+  String message="";
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

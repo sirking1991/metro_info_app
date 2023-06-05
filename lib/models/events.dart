@@ -11,29 +11,28 @@ class Events {
   String updatedAt;
 
   Events(
-      {this.id,
-      this.lguId,
-      this.postedBy,
-      this.name,
-      this.content,
-      this.eventFrom,
-      this.eventTo,
-      this.broadcast,
-      this.createdAt,
-      this.updatedAt});
+      {this.id=0,
+      this.lguId=0,
+      this.postedBy=0,
+      this.name="",
+      this.content="",
+      this.eventFrom="",
+      this.eventTo="",
+      this.broadcast="",
+      this.createdAt="",
+      this.updatedAt=""});
 
-  Events.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    lguId = json['lgu_id'];
-    postedBy = json['posted_by'];
-    name = json['name'];
-    content = json['content'];
-    eventFrom = json['event_from'];
-    eventTo = json['event_to'];
-    broadcast = json['broadcast'];
-    createdAt = json['created_at'];
+  Events.fromJson(Map<String, dynamic> json) :
+    id = json['id'],
+    lguId = json['lgu_id'],
+    postedBy = json['posted_by'],
+    name = json['name'],
+    content = json['content'],
+    eventFrom = json['event_from'],
+    eventTo = json['event_to'],
+    broadcast = json['broadcast'],
+    createdAt = json['created_at'],
     updatedAt = json['updated_at'];
-  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

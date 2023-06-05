@@ -17,7 +17,7 @@ class NewsList extends StatefulWidget {
 class _NewsListState extends State<NewsList> {
   int _lgu = 0;
 
-  SharedPreferences _prefs;
+  late SharedPreferences _prefs;
 
   List<News> _news = [];
 
@@ -29,11 +29,11 @@ class _NewsListState extends State<NewsList> {
 
   _getPrefs() async {
     _prefs = await SharedPreferences.getInstance();
-    _lgu = _prefs.getInt("lgu_id");
+    _lgu = _prefs.getInt("lgu_id")!!;
 
     var tmp = _prefs.getString("news");
     if (null != tmp) {
-      List tmpNewsList = News.getMapNews(json.decode(tmp));
+      List<News> tmpNewsList = News.getMapNews(json.decode(tmp));
       print("displaying news from cache");
       setState(() => _news = tmpNewsList);
     }
@@ -117,7 +117,7 @@ class _ListItemState extends State<ListItem> {
       ..startOf(Units.HOUR);
 
     return Consumer<AppState>(
-      builder: (BuildContext context, AppState appState, Widget child) {
+      builder: (BuildContext context, AppState appState, Widget? child) {
         return ListTile(
           leading: Icon(
             read ? Icons.mail_outline : Icons.mail,

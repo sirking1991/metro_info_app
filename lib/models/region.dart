@@ -3,7 +3,7 @@ class Region {
   String name;
   String shortName;
 
-  Region({this.id, this.name, this.shortName});
+  Region({this.id=0, this.name="", this.shortName=""});
 
   factory Region.fromJason(Map<String, dynamic> json) {
     return Region(

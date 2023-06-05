@@ -9,25 +9,24 @@ class LGU {
   String updatedAt;
 
   LGU(
-      {this.id,
-      this.regionShortName,
-      this.name,
-      this.slug,
-      this.logoUrl,
-      this.color,
-      this.createdAt,
-      this.updatedAt});
+      {this.id=0,
+      this.regionShortName="",
+      this.name="",
+      this.slug="",
+      this.logoUrl="",
+      this.color="",
+      this.createdAt="",
+      this.updatedAt=""});
 
-  LGU.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    regionShortName = json['region_short_name'];
-    name = json['name'];
-    slug = json['slug'];
-    logoUrl = json['logo_url'];
-    color = json['color'];
-    createdAt = json['created_at'];
+  LGU.fromJson(Map<String, dynamic> json):
+    id = json['id'],
+    regionShortName = json['region_short_name'],
+    name = json['name'],
+    slug = json['slug'],
+    logoUrl = json['logo_url'],
+    color = json['color'],
+    createdAt = json['created_at'],
     updatedAt = json['updated_at'];
-  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

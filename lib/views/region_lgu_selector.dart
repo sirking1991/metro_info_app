@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class RegionLGUSelector extends StatefulWidget {
   final bool isIntial;
-  RegionLGUSelector({Key key, this.isIntial = false}) : super(key: key);
+  RegionLGUSelector({this.isIntial = false}) : super();
   @override
   _RegionLGUSelector createState() {
     return _RegionLGUSelector();
@@ -44,7 +44,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
   ];
   List<LGU> _lgusData = [];
   Region _selectedRegion = _regionList[0]; // Initially selected region is NCR
-  LGU _lguValue; //initial value of LGUS
+  late LGU _lguValue; //initial value of LGUS
   //this will be used to keep the initial value of the application
   bool done = false;
 
@@ -109,7 +109,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
   // this function is for making the list of map into list of LGUs instance and setting the downdown items value
   getLGUs(String regionShortName) async {
     ApiProvider().get("lgus/" + regionShortName).then((response) {
-      List _lGUsDataList = LGU.getMapLGUs(response);
+      List<LGU> _lGUsDataList = LGU.getMapLGUs(response);
 
       setState(() {
         _lgusData = _lGUsDataList;
@@ -185,8 +185,8 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
               padding: EdgeInsets.all(25.0),
               child: DropdownButton(
                 value: _selectedRegion,
-                onChanged: (Region r) {
-                  _selectedRegion = r;
+                onChanged: (Region? r) {
+                  _selectedRegion = r!;
                   getLGUs(_selectedRegion.shortName);
                 },
                 items: _regionList.map<DropdownMenuItem<Region>>((value) {
@@ -203,7 +203,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
                 value: _lguValue,
                 onChanged: (newValue) {
                   setState(() {
-                    _lguValue = newValue;
+                    _lguValue = newValue as LGU;
                   });
                 },
                 items: _lgusData.map<DropdownMenuItem<LGU>>((value) {

@@ -17,7 +17,7 @@ class EventsList extends StatefulWidget {
 class _EventsListState extends State<EventsList> {
   int _lgu = 0;
 
-  SharedPreferences _prefs;
+  late SharedPreferences _prefs;
 
   List<Events> _events = [];
 
@@ -29,11 +29,11 @@ class _EventsListState extends State<EventsList> {
 
   _getPrefs() async {
     _prefs = await SharedPreferences.getInstance();
-    _lgu = _prefs.getInt("lgu_id");
+    _lgu = _prefs.getInt("lgu_id")!!;
 
     var tmp = _prefs.getString("Events");
     if (null != tmp) {
-      List tmpEventsList = Events.getMapEvents(json.decode(tmp));
+      List<Events> tmpEventsList = Events.getMapEvents(json.decode(tmp));
       print("displaying Events from cache");
       setState(() => _events = tmpEventsList);
     }
@@ -117,7 +117,7 @@ class _ListItemState extends State<ListItem> {
     var jiffyEventTo = Jiffy(DateTime.parse(widget._events.eventTo));
 
     return Consumer<AppState>(
-      builder: (BuildContext context, AppState appState, Widget child) {
+      builder: (BuildContext context, AppState appState, Widget? child) {
         return ListTile(
           leading: Icon(
             read ? Icons.calendar_today : Icons.calendar_today,

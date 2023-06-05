@@ -6,14 +6,14 @@ import 'package:metro_info/networking/api_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppState extends ChangeNotifier {
-  int _lguId;
+  int _lguId = 0;
   int get lguId => _lguId;
   set lguId(int lguId) {
     _lguId = lguId;
     notifyListeners();
   }
 
-  String _lguName;
+  String _lguName="";
   String get lguName => _lguName;
   set lguName(String lguName) {
     _lguName = lguName;
@@ -73,7 +73,7 @@ class AppState extends ChangeNotifier {
   String _regionShortName = '';
   String get regionShortName => _regionShortName;
 
-  SharedPreferences _pref;
+  late SharedPreferences _pref;
   SharedPreferences get pref => _pref;
 
   init() {
@@ -88,12 +88,12 @@ class AppState extends ChangeNotifier {
   _setGlobalVars() async {
     _pref = await SharedPreferences.getInstance();
 
-    _lguId = _pref.getInt("lgu_id");
-    _lguName = _pref.getString("lgu_name");
-    _lguThemeColor = _pref.getString('lgu_primary_color');
-    _lguLogoUrl = _pref.getString('lgu_logo_url');
-    _regionShortName = _pref.getString("region_short_name");
-    _firstName = _pref.getString("first_name");
+    _lguId = _pref.getInt("lgu_id")!!;
+    _lguName = _pref.getString("lgu_name")!!;
+    _lguThemeColor = _pref.getString('lgu_primary_color')!!;
+    _lguLogoUrl = _pref.getString('lgu_logo_url')!!;
+    _regionShortName = _pref.getString("region_short_name")!!;
+    _firstName = _pref.getString("first_name")!!;
     notifyListeners();
 
     // get LGU details from API
@@ -115,4 +115,6 @@ class AppState extends ChangeNotifier {
 
     
   }
+
+
 }

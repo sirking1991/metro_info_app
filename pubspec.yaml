@@ -19,9 +19,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   http:
-  device_id:
   provider:
   cached_network_image:
   rflutter_alert:

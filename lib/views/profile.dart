@@ -1,4 +1,3 @@
-import 'package:device_id/device_id.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_info/networking/api_provider.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +19,7 @@ class _ProfileState extends State<Profile> {
   TextEditingController _email = TextEditingController();
   TextEditingController _dob = TextEditingController();
 
-  SharedPreferences _pref;
+  late SharedPreferences _pref;
 
   AppUser _appUser = AppUser();
 
@@ -40,7 +39,7 @@ class _ProfileState extends State<Profile> {
     _appUser.mobile = _pref.getString("mobile") ?? "";
     _appUser.email = _pref.getString("email") ?? "";
     _appUser.dob = _pref.getString("dob") ?? "";
-    _appUser.lguId = _pref.getInt("lgu_id") ?? "";
+    _appUser.lguId = _pref.getInt("lgu_id") ?? 0;
 
     setState(() {
       _firstName.text = _appUser.firstName;
@@ -128,10 +127,10 @@ class _ProfileState extends State<Profile> {
                         initialDate: _dt,
                         firstDate: DateTime(1950),
                         lastDate: DateTime(2021),
-                        builder: (BuildContext context, Widget child) {
+                        builder: (BuildContext context, Widget? child) {
                           return Theme(
                             data: ThemeData.dark(),
-                            child: child,
+                            child: child!!,
                           );
                         },
                       ).then((dt) {
@@ -151,7 +150,7 @@ class _ProfileState extends State<Profile> {
                     padding: const EdgeInsets.symmetric(vertical: 40.0),
                     child: Consumer<AppState>(
                       builder: (BuildContext context, AppState appState,
-                          Widget child) {
+                          Widget? child) {
                         if (_processing) {
                           return Center(
                             child: CircularProgressIndicator(),
@@ -309,13 +308,13 @@ class _ProfileState extends State<Profile> {
 }
 
 class AppUser {
-  String deviceId;
-  String firstName;
-  String lastName;
-  String mobile;
-  String email;
-  String dob;
-  int lguId;
+  String deviceId="";
+  String firstName="";
+  String lastName="";
+  String mobile="";
+  String email="";
+  String dob="";
+  int lguId=0;
 
   AppUser() {
     _getDeviceInfo();
