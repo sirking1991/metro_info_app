@@ -82,8 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
             GestureDetector(
               onTap: () {
                 _launchURL('https://metro-info.herokuapp.com/about-lgu/' +
-                    Slugify(
-                        Provider.of<AppState>(context, listen: false).lguName));
+                    slugify(Provider.of<AppState>(context, listen: false).lguName));
               },
               child: ListTile(
                 // leading: Icon(Icons.info),

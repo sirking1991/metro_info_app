@@ -113,8 +113,8 @@ class _ListItemState extends State<ListItem> {
     bool read = null !=
         widget._prefs.getBool("events_read_" + widget._events.id.toString());
 
-    var jiffyEventFrom = Jiffy(DateTime.parse(widget._events.eventFrom));
-    var jiffyEventTo = Jiffy(DateTime.parse(widget._events.eventTo));
+    var jiffyEventFrom = Jiffy.parse(widget._events.eventFrom);
+    var jiffyEventTo = Jiffy.parse(widget._events.eventTo);
 
     return Consumer<AppState>(
       builder: (BuildContext context, AppState appState, Widget? child) {
@@ -128,9 +128,9 @@ class _ListItemState extends State<ListItem> {
             widget._events.name,
             style: TextStyle(fontSize: 20.0),
           ),
-          subtitle: Text(jiffyEventFrom.format('MMMM do yyyy, h:mm a') +
+          subtitle: Text(jiffyEventFrom.format(pattern: 'MMMM do yyyy, h:mm a') +
               ' to ' +
-              jiffyEventTo.format('MMMM do yyyy, h:mm a')),
+              jiffyEventTo.format(pattern: 'MMMM do yyyy, h:mm a')),
           enabled: true,
           contentPadding: EdgeInsets.only(top: 10.0, left: 10, right: 10),
           onTap: () {

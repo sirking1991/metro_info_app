@@ -113,8 +113,8 @@ class _ListItemState extends State<ListItem> {
     bool read = null !=
         widget._prefs.getBool("news_read_" + widget._news.id.toString());
 
-    var jiffy = Jiffy(DateTime.parse(widget._news.postingDate))
-      ..startOf(Units.HOUR);
+    var jiffy = Jiffy.parse(widget._news.postingDate)
+      ..startOf(Unit.hour);
 
     return Consumer<AppState>(
       builder: (BuildContext context, AppState appState, Widget? child) {

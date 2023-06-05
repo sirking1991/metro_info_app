@@ -22,8 +22,8 @@ class EventsDetail extends StatefulWidget {
 class _EventsDetailState extends State<EventsDetail> {
   @override
   Widget build(BuildContext context) {
-    var jiffyEventFrom = Jiffy(DateTime.parse( widget._events.eventFrom));
-    var jiffyEventTo = Jiffy(DateTime.parse( widget._events.eventTo));
+    var jiffyEventFrom = Jiffy.parse( widget._events.eventFrom);
+    var jiffyEventTo = Jiffy.parse( widget._events.eventTo);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -64,7 +64,7 @@ class _EventsDetailState extends State<EventsDetail> {
                         fontSize: 32.0),
                   ),
                   Text(
-                    jiffyEventFrom.format('MMMM do yyyy, h:mm a') + ' to ' + jiffyEventTo.format('MMMM do yyyy, h:mm a'),
+                    jiffyEventFrom.format(pattern: 'MMMM do yyyy, h:mm a') + ' to ' + jiffyEventTo.format(pattern: 'MMMM do yyyy, h:mm a'),
                     style: TextStyle(
                         color: Colors.grey,
                         fontSize: 15.0),

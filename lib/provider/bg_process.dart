@@ -13,7 +13,7 @@ void backgroundFetchHeadlessTask(String taskId) async {
 }
 
 class BgProcess extends ChangeNotifier {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   init() async {
     print("BgProcess.init()");
@@ -35,8 +35,7 @@ class BgProcess extends ChangeNotifier {
       requestAlertPermission: false,
       onDidReceiveLocalNotification: onDidReceiveLocalNotification,
     );
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+    var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: selectNotification);
@@ -52,11 +51,11 @@ class BgProcess extends ChangeNotifier {
   }
 
   Future onDidReceiveLocalNotification(
-      int id, String title, String body, String payload) async {
+      int id, String? title, String? body, String? payload) async {
     // display a dialog with the notification details, tap ok to go to another page
   }
 
-  Future selectNotification(String payload) async {
+  Future selectNotification(String? payload) async {
     if (payload != null) {
       debugPrint('notification payload: ' + payload);
     }
@@ -66,10 +65,10 @@ class BgProcess extends ChangeNotifier {
     print('sending notification: ' + body);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your-channel-id', 'your-channel-name', 'your-channel-description',
-        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+        importance: Importance.max, priority: Priority.high, ticker: 'ticker');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+        android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin
         .show(id, title, body, platformChannelSpecifics, payload: 'item x');
   }

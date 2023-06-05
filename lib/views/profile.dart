@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:metro_info/networking/api_provider.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +13,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Profile extends StatefulWidget {
   @override
   _ProfileState createState() => _ProfileState();
+}
+Future<String?> _getId() async {
+  var deviceInfo = DeviceInfoPlugin();
+  if (Platform.isIOS) { // import 'dart:io'
+    var iosDeviceInfo = await deviceInfo.iosInfo;
+    return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+  } else if(Platform.isAndroid) {
+    var androidDeviceInfo = await deviceInfo.androidInfo;
+    return androidDeviceInfo.androidId; // unique ID on Android
+  }
 }
 
 class _ProfileState extends State<Profile> {
@@ -321,7 +334,7 @@ class AppUser {
   }
 
   void _getDeviceInfo() async {
-    deviceId = await DeviceId.getID;
+    deviceId = await _getId()??"";
   }
 
   Map<String, dynamic> toJson() {

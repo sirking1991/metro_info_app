@@ -22,8 +22,8 @@ class NewsDetail extends StatefulWidget {
 class _NewsDetailState extends State<NewsDetail> {
   @override
   Widget build(BuildContext context) {
-    var jiffy = Jiffy(DateTime.parse( widget._news.postingDate))
-      ..startOf(Units.HOUR);
+    var jiffy = Jiffy.parse( widget._news.postingDate)
+      ..startOf(Unit.hour);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -64,7 +64,7 @@ class _NewsDetailState extends State<NewsDetail> {
                         fontSize: 32.0),
                   ),
                   Text(
-                    jiffy.fromNow() + ', ' + jiffy.format('MMM do yyyy'),
+                    jiffy.fromNow() + ', ' + jiffy.format(pattern: 'MMM do yyyy'),
                     style: TextStyle(
                         color: Colors.grey,
                         fontSize: 15.0),

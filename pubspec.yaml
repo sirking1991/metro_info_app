@@ -29,8 +29,10 @@ dependencies:
   url_launcher: ^6.1.11
   slugify: ^2.0.0
   cupertino_icons: ^1.0.5
+  device_info_plus: ^3.2.3
+  flutter_local_notifications: ^8.1.1
   background_fetch: ^1.1.6
-
+  change_app_package_name: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

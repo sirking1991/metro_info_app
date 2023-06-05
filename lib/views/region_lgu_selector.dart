@@ -44,7 +44,7 @@ class _RegionLGUSelector extends State<RegionLGUSelector> {
   ];
   List<LGU> _lgusData = [];
   Region _selectedRegion = _regionList[0]; // Initially selected region is NCR
-  late LGU _lguValue; //initial value of LGUS
+  LGU _lguValue=LGU(); //initial value of LGUS
   //this will be used to keep the initial value of the application
   bool done = false;
 
