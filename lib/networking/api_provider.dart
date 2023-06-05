@@ -12,7 +12,7 @@ class ApiProvider {
     var responseJson;
     try {
       print('GETting data from ' + _baseUrl + url);
-      final response = await http.get((_baseUrl + url) as Uri);
+      final response = await http.get((Uri.parse(_baseUrl + url)));
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -25,7 +25,7 @@ class ApiProvider {
     try {
       print('POSTting data to ' + _baseUrl + url);
 
-      final response = await http.post((_baseUrl + url) as Uri,
+      final response = await http.post(Uri.parse(_baseUrl + url),
           headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           },
